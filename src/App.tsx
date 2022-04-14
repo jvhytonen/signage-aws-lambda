@@ -3,12 +3,13 @@ import './App.css';
 
 type doSomethingType = () => void
 function App() {
-  console.log(process.env.TEST)
 
 const doSomething: doSomethingType = async () => {
- const response = await fetch('https://4r294n67b7.execute-api.eu-north-1.amazonaws.com/dev/flight-data')
+  console.log('sdf')
+ const response = await fetch('http://localhost:3000/schedulesTEST.json')
  const data = await response.json()
  console.log(data)
+
 
 }
  
