@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import './App.css';
-import FlightDataTable from './Components/FlightDataTable'
+import FlightDataTable, { FlightDataItemsType } from './Components/FlightDataTable/FlightDataTable'
 import { IataToCity } from './Utils/IataToCity.js'
+import { formatDate } from './Utils/FormatDate';
 
 // Date for development purposes
 const NOWTEST = new Date('2022-04-14 10:43')
+
+interface codeShareType {
+  airline: string
+  flightNr: string,
+  codeShareNr: string
+}
 
 type fetchDataType = () => void
 
@@ -14,18 +21,28 @@ const [flightData, setFlightData] = useState<any>([])
 const fetchData: fetchDataType = async () => {
  const response = await fetch('http://localhost:3000/schedulesTEST.json')
  const data = await response.json()
- const flightDataItems = []
+ const flightDataItems:FlightDataItemsType[] = []
+ const codeShares: codeShareType[] = []
+//  First we loop trough object to find original (not codeshare) flights within the given time radius. 
  for (let i = 0; i < data.response.length; i++) {
    if (data.response[i].dep_time_ts - 1649921700 > 21600) {
-     console.log(data.response[i].dep_time_ts - 1649921700)
-     console.log(data.response[i].airline_iata)
      break
    }
+   if (data.response[i].cs_flight_iata !== null) {
+     const csItem:codeShareType = {
+        airline: data.response[i].airline_iata,
+        flightNr: data.response[i].flight_iata,
+        codeShareNr: data.response[i].cs_flight_iata
+     }
+     codeShares.push(csItem)
+    continue
+    }
     const item = {
-     airline: data.response[i].airline_iata,
-     flightNr: data.response[i].flight_iata,
+     codeShareNr: data.response[i].cs_flight_number,
+     airline: [data.response[i].airline_iata],
+     flightNr: [data.response[i].flight_iata],
      destination: IataToCity(data.response[i].arr_iata),
-     dep_time: data.response[i].dep_time,
+     depTime: formatDate(data.response[i].dep_time),
      actualDep: data.response[i].dep_actual,
      estimatedDep: data.response[i].dep_estimated,
      terminal: data.response[i].dep_terminal,
@@ -33,8 +50,19 @@ const fetchData: fetchDataType = async () => {
     }
     flightDataItems.push(item)
   }
+  // Then we loop again to push all codeshare flights into the item where they belong
+    for (let i = 0; i < codeShares.length; i++) {
+      let csItem = codeShares[i].codeShareNr
+      let csAirline = codeShares[i].airline
+      console.log(csItem)
+      flightDataItems.forEach((item) => {
+        if (item.flightNr[0] === csItem) {
+          item.flightNr.push(csItem)
+          item.airline.push(csAirline)
+        }
+      })
+    }
  setFlightData(flightDataItems)
- IataToCity('ARN')
 }
  
   return (
