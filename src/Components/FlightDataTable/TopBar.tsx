@@ -1,6 +1,12 @@
-const TopBar = () => {
+interface TopBarType {
+    direction: string
+    date: string
+}
+
+const TopBar = (props: TopBarType) => {
+  
     return (
-        <p>Departures</p>
+        <p>{props.direction.toUpperCase()} {props.date}</p>
     )
 }
 export default TopBar

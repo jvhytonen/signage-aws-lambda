@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
 import FlightDataTable, { FlightDataItemsType } from './Components/FlightDataTable/FlightDataTable'
-import { IataToCity } from './Utils/IataToCity.js'
+import { IataToCity } from './Utils/AirportIataToCity.js'
+import { AirlineIataToName, FormatArrays } from './Utils/AirlineIataToName';
 import { formatDate } from './Utils/FormatDate';
 
 // Date for development purposes
@@ -39,12 +40,12 @@ const fetchData: fetchDataType = async () => {
     }
     const item = {
      codeShareNr: data.response[i].cs_flight_number,
-     airline: [data.response[i].airline_iata],
-     flightNr: [data.response[i].flight_iata],
+     airline: [[AirlineIataToName(data.response[i].airline_iata)]],
+     flightNr: [[data.response[i].flight_iata]],
      destination: IataToCity(data.response[i].arr_iata),
      depTime: formatDate(data.response[i].dep_time),
      actualDep: data.response[i].dep_actual,
-     estimatedDep: data.response[i].dep_estimated,
+     estimatedDep: data.response[i].dep_estimated ? formatDate(data.response[i].dep_estimated) : ' ',
      terminal: data.response[i].dep_terminal,
      gate: data.response[i].dep_gate
     }
@@ -53,18 +54,20 @@ const fetchData: fetchDataType = async () => {
   // Then we loop again to push all codeshare flights into the item where they belong
     for (let i = 0; i < codeShares.length; i++) {
       let csItem = codeShares[i].codeShareNr
-      let csAirline = codeShares[i].airline
-      console.log(csItem)
+      let flightNr = codeShares[i].flightNr
+      let csAirline = AirlineIataToName(codeShares[i].airline)
       flightDataItems.forEach((item) => {
-        if (item.flightNr[0] === csItem) {
-          item.flightNr.push(csItem)
-          item.airline.push(csAirline)
+        if (item.flightNr[0][0] === csItem) {
+          const newNr = FormatArrays(item.flightNr, flightNr)
+          item.flightNr = newNr
+          const newAirline = FormatArrays(item.airline, csAirline)
+          item.airline = newAirline
         }
       })
     }
  setFlightData(flightDataItems)
 }
- 
+
   return (
     <div className="App h-full w-full">
           <h1 onClick={fetchData}>Hello</h1>
