@@ -3,7 +3,6 @@ interface FlightNumberType {
 }
 
 const FlightNumber = (props: FlightNumberType) => {
-    console.log(props.flightNumber)
     return (
         <ul className='w-full h-full flex'>
          {props.flightNumber.map((nr, ind) => {
