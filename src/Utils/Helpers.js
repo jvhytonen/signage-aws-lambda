@@ -1,6 +1,7 @@
 import { airlines } from './airlines'
 import { airports } from './airports'
 
+// This function will take only those items that fit the time limit given.
 export const getFlightsWithinTimeLimits = (object, timeLimit) => {
   const objWithLimit = []
   const firstDepTime = object[0].dep_time_ts
@@ -9,7 +10,6 @@ export const getFlightsWithinTimeLimits = (object, timeLimit) => {
     if (object[i].dep_time_ts - firstDepTime < timeLimit)
       objWithLimit.push(object[i])
   }
-
   return objWithLimit
 }
 
@@ -17,6 +17,8 @@ export const handleCodeShareFlights = (flightObj, type) => {
   let codeShares = []
   let admins = []
   for (let i = 0; i < flightObj.length; i++) {
+    // First all flights that ARE NOT codeshare-filghts will be pushed into an own array. The continue-statement will make sure
+    // the loop moves to next index
     if (flightObj[i].cs_flight_iata !== null) {
       const csItem = {
         airline: flightObj[i].airline_iata,
@@ -25,13 +27,17 @@ export const handleCodeShareFlights = (flightObj, type) => {
       }
       codeShares.push(csItem)
       continue
-    } else if (type === 'departures'){
+    }
+    // Depending on the type of the data (departure/arrival) necessary information will be added to object and pushed to an array.
+    else if (type === 'departures') {
       const AdminItem = {
         airline: [[AirlineIataToName(flightObj[i].airline_iata)]],
         flightNr: [[flightObj[i].flight_iata]],
         destination: IataToCity(flightObj[i].arr_iata),
         depTime: formatDate(flightObj[i].dep_time),
-        actualDep: flightObj[i].dep_actual,
+        actualDep: flightObj[i].dep_actual
+          ? formatDate(flightObj[i].dep_actual)
+          : null,
         estimatedDep: flightObj[i].dep_estimated
           ? formatDate(flightObj[i].dep_estimated)
           : null,
@@ -39,26 +45,32 @@ export const handleCodeShareFlights = (flightObj, type) => {
         gate: flightObj[i].dep_gate
       }
       admins.push(AdminItem)
-    }
-    else if (type === 'arrivals') {
-        const AdminItem = {
-            airline: [[AirlineIataToName(flightObj[i].airline_iata)]],
-            flightNr: [[flightObj[i].flight_iata]],
-            depDestination: IataToCity(flightObj[i].dep_iata),
-            arrTime: formatDate(flightObj[i].arr_time),
-            actualArr: flightObj[i].arr_actual,
-            estimatedArr: flightObj[i].arr_estimated ? formatDate(flightObj[i].arr_estimated) : ' ',
-            terminal: flightObj[i].arr_terminal,
-            baggage: flightObj[i].arr_baggage
-        }
-        admins.push(AdminItem)
+    } else if (type === 'arrivals') {
+      const AdminItem = {
+        airline: [[AirlineIataToName(flightObj[i].airline_iata)]],
+        flightNr: [[flightObj[i].flight_iata]],
+        depDestination: IataToCity(flightObj[i].dep_iata),
+        arrTime: formatDate(flightObj[i].arr_time),
+        actualArr: flightObj[i].arr_actual
+          ? formatDate(flightObj[i].arr_actual)
+          : null,
+        estimatedArr: flightObj[i].arr_estimated
+          ? formatDate(flightObj[i].arr_estimated)
+          : null,
+        terminal: flightObj[i].arr_terminal,
+        baggage: flightObj[i].arr_baggage
+      }
+      admins.push(AdminItem)
     }
   }
+  // The mergeCodeShares will make sure the codeshare flight numbers and airlines are added to the administrator flight object.
   const mergedFlights = mergeCodeShares(codeShares, admins)
   return mergedFlights
 }
 
 const mergeCodeShares = (codeShareFlights, adminFlights) => {
+  // The function will loop codeshare flights and finds their administrative host. All necessary data (flight number and airline) are
+  // added to the object of the administrative flight.
   for (let i = 0; i < codeShareFlights.length; i++) {
     let csItem = codeShareFlights[i].codeShareNr
     let flightNr = codeShareFlights[i].flightNr
@@ -75,6 +87,8 @@ const mergeCodeShares = (codeShareFlights, adminFlights) => {
   return adminFlights
 }
 
+// This function will search the name of the airline based on the IATA-code.
+// Object has key: "AIRLINE IATA-code" value: "Airline name"
 export const AirlineIataToName = iataCode => {
   const idx = airlines.findIndex(item => {
     return item.iata === iataCode

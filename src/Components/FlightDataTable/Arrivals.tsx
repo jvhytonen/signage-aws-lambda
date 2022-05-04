@@ -5,7 +5,6 @@ import FlightNumber from "./FlightNumber"
 import Time from "./Time"
 import Destination from "./Destination"
 import TerminalGateBG from "./TerminalGateBg"
-import TopBar from "./TopBar"
 
 export interface ArrDataItemsType {
     codeShareNr?: string
@@ -33,7 +32,7 @@ const Arrivals = (props: ArrivalDataType) => {
         return (
             <div key={index} style={{height: correctHeight}} id='TableItem' className='FlightDataTable w-full flex my-2'>
                 <div className='w-[20%] h-full flex items-center justify-center'>
-                 <Time originalTime={item.arrTime} estTime={item.estimatedArr}/>
+                 <Time originalTime={item.arrTime} estTime={item.estimatedArr} actualTime={item.actualArr} type='arrivals'/>
                 </div>
                 <div className='w-[25%] h-full overflow-hidden'>
                 <Airline airline={item.airline[0]}/>
@@ -45,7 +44,7 @@ const Arrivals = (props: ArrivalDataType) => {
                 </div>
                 </div>
                 <div className='w-[15%] h-full flex items-center justify-center'>
-                <TerminalGateBG gate={item.baggage} terminal={item.terminal}/>
+                <TerminalGateBG gate={item.baggage} terminal={item.terminal} type='arrivals'/>
                 </div>
             </div>
         )
