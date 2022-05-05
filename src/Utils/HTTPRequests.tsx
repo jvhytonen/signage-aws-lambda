@@ -7,7 +7,7 @@ export const fetchDepData: fetchDataType = async () => {
     try {
         const data = await fetch('http://localhost:3000/schedulesTEST.json')
         const parsedData = await data.json()
-        const flightsWithinTimeLimit = getFlightsWithinTimeLimits(parsedData.response, 21600)
+        const flightsWithinTimeLimit = getFlightsWithinTimeLimits(parsedData.response, 3600)
         const flightsWithCodeShares: DepDataItems[] = handleCodeShareFlights(flightsWithinTimeLimit, 'departures')
      
         return flightsWithCodeShares
