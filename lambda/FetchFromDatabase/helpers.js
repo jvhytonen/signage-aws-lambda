@@ -1,7 +1,27 @@
 const airlines = require('./airlines')
-const airports = require ('./airports')
+const airports = require('./airports')
 
-// This function will take only those items that fit the time limit given.
+/**
+ * This function will receive data outside this module, uses other functions in this module to format data
+ * and returns data.
+ * @param {object} data The incoming data.
+ * @param {number} timeLimit The time in seconds for the range of the scheduled fligths.
+ * @return {object} formattedFlights object ready to be used in the browser.
+ */
+const formatData = (data, timeLimit, type) => {
+  const withinTimeLimits = getFlightsWithinTimeLimits(data, timeLimit)
+  const formattedFlights = handleCodeShareFlights(withinTimeLimits, type)
+  return formattedFlights
+}
+
+/**
+ * Object from the API contains usually 6 hours of flight schedules, but this
+ * will reduce the amount of flights to be shown according to the time limit given.
+ *
+ * @param {object} object Object with all flights
+ * @param {number} timeLimit The time in seconds for the range of the scheduled fligths.
+ * @return {object} objWithLimit contains those flights fitting the time range.
+ */
 const getFlightsWithinTimeLimits = (object, timeLimit) => {
   const objWithLimit = []
   const thisDate = new Date()
@@ -14,7 +34,14 @@ const getFlightsWithinTimeLimits = (object, timeLimit) => {
   }
   return objWithLimit
 }
-
+/**
+ * Object from the API will show even the codeshare flights as an individual flights.
+ * This function will merge ccodeshare flights in to one single flight containing all codeshare flight numbers
+ * and airlines.
+ * @param {object} flightObj Object with all codeshare flights as individual flights.
+ * @param {string} type The type of the schedule: Departure or Arrival
+ * @return {object} mergedFlights codeshare flights merged to their administrative flight.
+ */
 const handleCodeShareFlights = (flightObj, type) => {
   let codeShares = []
   let admins = []
@@ -98,7 +125,7 @@ const AirlineIataToName = iataCode => {
   const name = idx === -1 ? iataCode : airlines[idx].airline
   return name
 }
-
+/* 
 const FormatAirlines = (originalFlightArr, newFlightNr) => {
   for (let i = 0; i < originalFlightArr.length; i++) {
     if (originalFlightArr[i].length < 4) {
@@ -107,7 +134,7 @@ const FormatAirlines = (originalFlightArr, newFlightNr) => {
     }
   }
   return originalFlightArr
-}
+} */
 
 const FormatArrays = (originalArr, newItem) => {
   for (let i = 0; i < originalArr.length; i++) {
@@ -133,6 +160,5 @@ const formatDate = date => {
 }
 
 module.exports = {
-   handleCodeShareFlights,
-   getFlightsWithinTimeLimits
+  formatData
 }
