@@ -44,7 +44,7 @@ const FlightDataTable = (props: FlightDataType) => {
 
     return (
         <div className='w-full h-screen flex'>
-            <div className='w-1/2 h-full relative justify-around border border-red-300'>
+            <div className='w-1/2 h-full relative justify-around border bg-gradient-to-b from-blue-500 to-cyan-500'>
                 <div className='h-[5%] w-full m-auto flex items-center justify-center'>
                     <TopBar direction='departures' date="2.5.2022" />
                 </div>
