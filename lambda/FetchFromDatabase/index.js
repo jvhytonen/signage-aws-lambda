@@ -1,25 +1,20 @@
+const getFlights = require('./getFlightItem')
 
-const AWS = require('aws-sdk');
-const dynamodb = new AWS.DynamoDB({region: 'eu-north-1', apiVersion: '2012-08-10'});
+const settings = {
+    airport: 'HEL'
+}
 
-exports.handler = (event, context, callback) => {
+exports.handler = async (event, callback) => {
     
-   let params = {
-    TableName: "Timetables",
-    Key: {
-    CityType: { S: "HELDEP" },
-  },
-}; 
-    
-dynamodb.getItem(params, function(err, data) {
-        if (err) {
-            console.log(err);
-            callback(err);
-        } else {
-         const items = JSON.parse(data.Item.data.S);   
-         
-         
-            callback(null, items);
-        }
-    });
+   const departures = await getFlights.getItem("Timetables", settings.airport, 'DEP');
+   const arrivals = await getFlights.getItem("Timetables", settings.airport, 'ARR');
+   const data = {
+       departures: departures.Item.data.S,
+       arrivals: arrivals.Item.data.S
+   }
+   const response = {
+       statusCode: 200,
+       body: data
+   };
+    return response;
 };
