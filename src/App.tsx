@@ -1,54 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import FlightDataTable from './Components/FlightDataTable/FlightDataTable'
-import { fetchArrData, fetchDepData } from './Utils/HTTPRequests'
+import { fetchApiData } from './Utils/HTTPRequests'
 import Error from './Components/UI/Error'
 
-type fetchDataType = () => void
+type connectAPIType = () => void
 
 function App() {
-  const [flightData, setFlightData] = useState<any>(null)
+  const [apiData, setApiData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  /* 
-  const fetchData: fetchDataType = async () => {
-  const depDataItems = await fetchDepData()
-  const arrDataItems = await fetchArrData()
-  setIsLoading(false)
-  if (depDataItems === null) {
-    return
+  
+
+  const connectApi: connectAPIType = async () => {
+    try {
+      const fetchedItems = await fetchApiData()
+      console.log(fetchedItems)
+      if (fetchedItems === null) {
+        return
+      }
+
+      setIsLoading(false)
+      setApiData(fetchedItems)
+    }
+    catch (err) {
+      console.log('Something went wrong')
+    }
   }
-  const flightDataObj = {
-    departures: depDataItems,
-    arrivals: arrDataItems
-  }
-   setFlightData(flightDataObj)
-  } */
 
   useEffect(() => {
-    const fetchData: fetchDataType = async () => {
-      try {
-        const depDataItems = await fetchDepData()
-        const arrDataItems = await fetchArrData()
-        setIsLoading(false)
-        if (depDataItems === null) {
-          return
-        }
-        const flightDataObj = {
-          departures: depDataItems,
-          arrivals: arrDataItems
-        }
-        setFlightData(flightDataObj)
-      }
-      catch (err) {
-        console.log('Something went wrong')
-      }
+    const intervalCall = setInterval(() => {
+      setIsLoading(true)
+      console.log('connecting')
+      connectApi();
+    }, 6000)
+    return () => {
+      clearInterval(intervalCall)
     }
-    fetchData()
   }, [])
 
   return (
     <div className="App h-full w-full">
-      {flightData !== null ? <FlightDataTable data={flightData} /> : <Error message={`${isLoading ? 'Loading... ' : 'Something went wrong'}`} />}
+      {apiData !== null ? <FlightDataTable data={apiData} /> : <Error message={`${isLoading ? 'Loading... ' : 'Something went wrong'}`} />}
     </div>
   );
 }

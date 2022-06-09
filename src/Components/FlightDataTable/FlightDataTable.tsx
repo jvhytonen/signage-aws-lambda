@@ -1,8 +1,10 @@
 import animateScrollTo from 'animated-scroll-to';
-import React, {useEffect, useRef} from "react"
+import React, { useEffect, useRef } from "react"
 import Departures, { DepDataItems } from './Departures'
-import TopBar from "./TopBar"
+import TopBar from "../TopBar/TopBar"
 import Arrivals, { ArrDataItemsType } from "./Arrivals"
+import News from "../News/News";
+import Ads from '../Ads/Ads'
 
 export interface AppType {
     departures: DepDataItems[]
@@ -23,15 +25,15 @@ const FlightDataTable = (props: FlightDataType) => {
         const tableElem = document.querySelector(".Table")
         if (children !== undefined) {
             const lastElem = children[children?.length - 1]
-          //  For some reason TypeScript compiler won't accept the Table element to be scroller (elementToScroll) 
-          // even this is be made according to documentation in animateScrollTo -dokumentation. Hence the ignore.
+            //  For some reason TypeScript compiler won't accept the Table element to be scroller (elementToScroll) 
+            // even this is be made according to documentation in animateScrollTo -dokumentation. Hence the ignore.
             // @ts-ignore
-          await animateScrollTo(lastElem, {
+            await animateScrollTo(lastElem, {
                 elementToScroll: tableElem,
                 cancelOnUserAction: false,
                 // minDuration: (children.length * 3000),
                 speed: 3500
-            }) 
+            })
         }
         else {
             return
@@ -39,22 +41,29 @@ const FlightDataTable = (props: FlightDataType) => {
     }
 
     useEffect(() => {
-     startScrolling()
+        startScrolling()
     }, [])
 
     return (
-        <div className='w-full h-screen flex'>
-            <div className='w-1/2 h-full relative justify-around border bg-gradient-to-b from-blue-500 to-cyan-500'>
-                <div className='h-[5%] w-full m-auto flex items-center justify-center'>
-                    <TopBar direction='departures' date="2.5.2022" />
-                </div>
-                <div ref={timeDiv} className='h-[95%] w-[95%] m-auto overflow-y-auto Table'>
-                    {props.data === undefined ? <h1>No data</h1> : <Departures data={props.data.departures} />}
-                    {/* {props.data === undefined ? <h1>No data</h1> : <Arrivals data={props.data.arrivals} />} */}
-                </div>
+        <div className='w-full h-screen'>
+            <div className='h-[8%] w-full m-auto items-center justify-center bg-sky-800 shadow-md'>
+                <TopBar direction='Departures' date="10.25" publicTransport='Public Transport' />
             </div>
-            <div className='w-1/2 h-full'>
-                <h1>Another half</h1>
+            <div className='h-[85%] w-full flex shadow-md'>
+                <div className='w-1/2 h-full relative justify-around border bg-gradient-to-b from-blue-500 to-cyan-500'>
+                    <div ref={timeDiv} className='h-full w-[95%] m-auto overflow-y-auto Table'>
+                        {props.data === undefined ? <h1>No data</h1> : <Departures data={props.data.departures} />}
+                        {/* {props.data === undefined ? <h1>No data</h1> : <Arrivals data={props.data.arrivals} />} */}
+                    </div>
+                </div>
+                <div className='w-1/2 h-full flex flex-col justify-center items-center justify-around'>
+                    <div className='h-[45%] w-[90%] shadow-lg'>
+                        <News newsItems='Here will be news' />
+                    </div>
+                    <div className='h-[45%] w-[90%] shadow-lg'>
+                        <Ads adItems='Some Ads here'/>
+                    </div>
+                </div>
             </div>
         </div>
     )
