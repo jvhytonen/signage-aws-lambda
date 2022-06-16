@@ -32,7 +32,7 @@ function App() {
       setIsLoading(true)
       console.log('connecting')
       connectApi();
-    }, 6000)
+    }, 20000)
     return () => {
       clearInterval(intervalCall)
     }
