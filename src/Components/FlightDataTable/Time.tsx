@@ -10,11 +10,11 @@ const Time = (props: TimeType) => {
     let timeColor:string
     let detailText: string
     if (isDeparted) {
-        timeColor = 'bg-green-600'
+        timeColor = 'text-green-600'
         detailText = props.type === 'departures' ? 'Departed ' : 'Landed '
     }
     else if (isEstimated) {
-        timeColor = 'bg-amber-400'
+        timeColor = 'text-amber-400'
         detailText = 'Est '
     }
     else {
@@ -41,7 +41,7 @@ const Time = (props: TimeType) => {
         }
     }
     return (
-        <div className='h-full w-full flex items-center justify-around px-4'>
+        <div className='h-full w-full flex items-center justify-around px-4 text-xl'>
             {renderType(props.type)}
         </div>
     )

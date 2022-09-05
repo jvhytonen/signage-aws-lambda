@@ -4,7 +4,7 @@ interface DestinationType {
 
 const Destination = (props: DestinationType) => {
     return (
-        <h1>{props.destination}</h1>
+        <p>{props.destination}</p>
     )
 }
 export default Destination

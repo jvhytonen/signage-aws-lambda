@@ -25,35 +25,32 @@ export interface FlightDataType {
 
 
 const Departures = (props: FlightDataType) => {
-    let elem = document.getElementById('TableItem')
-    let parent = elem?.parentElement?.offsetHeight
-    let correctHeight = parent !== undefined ? `${parent / 8}px` : '100px'
 
-    const rows = props.data.map((item: DepDataItems, index:number) => {
+    const rows = props.data.map((item: DepDataItems, index: number) => {
         return (
-            <div key={index} style={{height: correctHeight}} id='TableItem' className='FlightDataTable w-full flex my-2'>
-                <div className='w-[28%] h-full flex items-center justify-center'>
-                 <Time originalTime={item.depTime} estTime={item.estimatedDep} actualTime={item.actualDep} type='departures'/>
+            <div key={index} id='TableItem' className='FlightDataTable w-full flex my-2'>
+                <div className='w-[33%] h-full flex items-center justify-center'>
+                    <Time originalTime={item.depTime} estTime={item.estimatedDep} actualTime={item.actualDep} type='departures' />
                 </div>
-                <div className='w-[22%] h-full overflow-hidden'>
+                {/*  <div className='w-[22%] h-full overflow-hidden'>
                 <Airline airline={item.airline[0]}/>
+                </div> */}
+                <div className='w-[22%] flex items-center justify-center'>
+                    <FlightNumber flightNumber={item.flightNr[0]} />
                 </div>
-                <div className='w-[35%] h-full flex flex-col items-start justify-center overflow-hidden'>
-                <Destination destination={item.destination}/>
-                <div className='justify-self-end'>
-                    <FlightNumber flightNumber={item.flightNr[0]}/>
-                </div>
+                <div className='w-[30%] flex items-center justify-start text-2xl ml-4'>
+                    <Destination destination={item.destination} />
                 </div>
                 <div className='w-[15%] h-full flex items-center justify-center'>
-                <TerminalGateBg gate={item.gate} terminal={item.terminal} type='departures'/>
+                    <TerminalGateBg gate={item.gate} terminal={item.terminal} type='departures' />
                 </div>
             </div>
         )
-    }) 
-
+    })
+    //  const rows = "Here will be rows once we get flight data here"
     return (
         <>
-     {rows}
+            {rows}
         </>
     )
 }
