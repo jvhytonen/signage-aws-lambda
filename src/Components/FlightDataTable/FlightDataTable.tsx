@@ -2,14 +2,18 @@ import animateScrollTo from 'animated-scroll-to';
 import React, { useEffect, useRef, useState } from "react"
 import Departures, { DepDataItems } from './Departures'
 import TopBar from "../TopBar/TopBar"
+import { ScheduleItemType } from '../TopBar/TopBarRight';
 import Arrivals, { ArrDataItemsType } from "./Arrivals"
+import {NewsType} from '../News/News'
 import NewsContainer from '../News/NewsContainer';
 import Ads from '../Ads/Ads'
 
 export interface AppType {
     body: {
-        departures: DepDataItems[]
+        departures: DepDataItems[][]
         arrivals: ArrDataItemsType[]
+        news: NewsType[]
+        publicTransport: ScheduleItemType[]
     }
 }
 export interface FlightDataType {
@@ -57,7 +61,7 @@ const FlightDataTable = (props: FlightDataType) => {
     return (
         <div className='w-full h-screen'>
             <div className='h-[8%] w-full m-auto items-center justify-center bg-sky-800 shadow-md'>
-                <TopBar direction='Departures' date="10.25" publicTransport={schedules} />
+                <TopBar direction='Departures' date="10.25" publicTransport={props.data.body.publicTransport} />
             </div>
             <div className='h-full w-full flex shadow-md'>
                 <div className='w-1/2 h-full relative justify-around border bg-gradient-to-b from-blue-500 to-cyan-500'>
@@ -66,10 +70,10 @@ const FlightDataTable = (props: FlightDataType) => {
                         {/* {props.data === undefined ? <h1>No data</h1> : <Arrivals data={props.data.arrivals} />} */}
                     </div>
                 </div>
-                <div className='w-1/2 h-full flex flex-col justify-center items-center'>
+                <div className='w-1/2 h-full flex flex-col justify-around items-center'>
                     <div className='h-[45%] w-[90%] shadow-lg'>
-                        <div className='w-full h-[80%] flex'>
-                            <NewsContainer news={newsArr} />
+                        <div className='w-full h-full flex'>
+                            <NewsContainer news={props.data.body.news} />
                         </div>
                     </div>
                     <div className='h-[45%] w-[90%] shadow-lg'>

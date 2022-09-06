@@ -1,18 +1,19 @@
 import 'animate.css';
 import { useEffect, useRef } from 'react'
 
-interface RightTopType {
-    publicTransport: SchedulesType[]
+interface SchedulesType {
+    publicTransport: ScheduleItemType[]
 }
 
-export interface SchedulesType {
-    scheduledDeparture: number
+export interface ScheduleItemType {
+    scheduledDeparture: string
     headsign: string
 }
 
 type scrollerType = (index: number) => void
 
-const TopBarRight = (props: RightTopType) => {
+
+const TopBarRight = (props: SchedulesType) => {
     const div = useRef<HTMLDivElement | null>(null)
     let timer:number
 

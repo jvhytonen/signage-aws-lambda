@@ -1,10 +1,10 @@
-import TopBarRight, {SchedulesType} from './TopBarRight'
+import TopBarRight, {ScheduleItemType} from './TopBarRight'
 import TopBarLeft from './TopBarLeft'
 
 interface TopBarType {
     direction: string
     date: string
-    publicTransport: SchedulesType[]
+    publicTransport: ScheduleItemType[]
 }
 
 const TopBar = (props: TopBarType) => {

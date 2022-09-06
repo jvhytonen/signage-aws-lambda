@@ -15,7 +15,7 @@ const Time = (props: TimeType) => {
     }
     else if (isEstimated) {
         timeColor = 'text-amber-400'
-        detailText = 'Est '
+        detailText = 'Estimated '
     }
     else {
         timeColor = ''

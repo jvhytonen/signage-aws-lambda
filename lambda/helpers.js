@@ -22,15 +22,15 @@ const formatData = (data, timeLimit, type) => {
  * @param {number} timeLimit The time in seconds for the range of the scheduled fligths.
  * @return {object} objWithLimit contains those flights fitting the time range.
  */
-const getFlightsWithinTimeLimits = (object, timeLimit) => {
+ const getFlightsWithinTimeLimits = (originalObj, timeLimit) => {
   const objWithLimit = []
   const thisDate = new Date()
   // This server is located in Stockholm so we need to add additional 3600 seconds (1 hour) to show right schedules.
   const thisMoment = Math.round(thisDate.getTime() / 1000) + 3600
 
-  for (let i = 0; i < object.length; i++) {
-    if (object[i].dep_time_ts - thisMoment < timeLimit)
-      objWithLimit.push(object[i])
+  for (let i = 0; i < originalObj.length; i++) {
+    if (originalObj[i].dep_time_ts - thisMoment < timeLimit || thisMoment - originalObj[i].dep_actual > 900)
+      objWithLimit.push(originalObj[i])
   }
   return objWithLimit
 }
