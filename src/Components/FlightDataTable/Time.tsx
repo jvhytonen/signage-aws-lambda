@@ -10,11 +10,11 @@ const Time = (props: TimeType) => {
     let timeColor:string
     let detailText: string
     if (isDeparted) {
-        timeColor = 'text-green-600'
+        timeColor = 'bg-green-600'
         detailText = props.type === 'departures' ? 'Departed ' : 'Landed '
     }
     else if (isEstimated) {
-        timeColor = 'text-amber-400'
+        timeColor = 'bg-amber-400'
         detailText = 'Estimated '
     }
     else {
@@ -26,7 +26,7 @@ const Time = (props: TimeType) => {
         switch (type) {
             case 'departures':
                 return (
-                    <div className='w-full h-full max-h-full flex items-start justify-around py-4'>
+                    <div className='w-full h-full max-h-full flex items-start justify-around'>
                         <p className='w-[40%]'>{props.originalTime}</p>
                         <p className={`w-[60%] ${timeColor}`}>{detailText}{props.estTime}</p>
                     </div>

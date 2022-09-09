@@ -6,10 +6,8 @@ interface NewsArrType {
     news: NewsType[]
 }
 
-
 const NewsContainer = (props: NewsArrType) => {
     const [currentInd, setCurrentInd] = useState(0)
-
     useEffect(() => {
         if (props.news) {
             const timer = setTimeout(() => {
@@ -25,11 +23,8 @@ const NewsContainer = (props: NewsArrType) => {
     }, [currentInd, props.news])
 
     return (
-        <div className='w-full h-full'>
-            <div className='w-full h-[20%] bg-green-700'>
-                <Weather temperature={12} weatherType={'overcast'} />
-            </div>
-            <div className='w-full h-[80%] bg-yellow-300'>
+        <div className='w-full h-full flex'>
+            <div className='w-3/5 h-full'>
                 <News
                     author={props.news[currentInd].author}
                     title={props.news[currentInd].title}
@@ -37,8 +32,16 @@ const NewsContainer = (props: NewsArrType) => {
                     urlToImage={props.news[currentInd].urlToImage}
                     publishedAt={props.news[currentInd].publishedAt} />
             </div>
+            <div className='w-2/5 h-full'>
+                <Weather location={'Helsinki'} temperature={12} weatherType={'overcast'} />
+            </div>
         </div>
     )
 }
 
 export default NewsContainer
+
+
+{/* <div className='w-full h-[20%] bg-green-700 flex items-center'>
+<Weather location={'Helsinki'} temperature={12} weatherType={'overcast'} />
+</div> */}

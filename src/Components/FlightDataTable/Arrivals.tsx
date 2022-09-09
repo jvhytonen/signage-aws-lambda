@@ -8,7 +8,7 @@ import TerminalGateBG from "./TerminalGateBg"
 
 export interface ArrDataItemsType {
     codeShareNr?: string
-    airline: string[][]
+    airline: string
     flightNr: string[][]
     depDestination: string
     arrTime: string
@@ -35,7 +35,7 @@ const Arrivals = (props: ArrivalDataType) => {
                  <Time originalTime={item.arrTime} estTime={item.estimatedArr} actualTime={item.actualArr} type='arrivals'/>
                 </div>
                 <div className='w-[25%] h-full overflow-hidden'>
-                <Airline airline={item.airline[0]}/>
+                <Airline airline={item.airline}/>
                 </div>
                 <div className='w-[40%] h-full flex flex-col items-start justify-center overflow-hidden'>
                 <Destination destination={item.depDestination}/>

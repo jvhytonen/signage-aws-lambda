@@ -10,13 +10,17 @@ export interface NewsType {
 
 const News = (props: NewsType) => {
     return (
-        <div className='w-full h-full'>
-            <div className='w-1/2 h-full bg-blue-300'>
-            <img src={props.urlToImage} alt=''/>
-            <div className='w-full max-h-full flex items-center'>
-                <p>{props.author}</p>
-                <p>{props.publishedAt}</p>
+        <div className='w-full h-full flex flex-col'>
+            <div className='w-full h-full'>
+                <img src={props.urlToImage} alt='' />
+       {/*          <div className='w-full h-full flex justify-around'>
+                    <p>{props.author}</p>
+                    <p>{props.publishedAt}</p>
+                </div> */}
             </div>
+            <div className='w-full h-full flex flex-col items-center justify-center mx-3'>
+                <p className='text-2xl'>{props.title}</p>
+                <p className='text-xl'>{props.description}</p>
             </div>
         </div>
     )

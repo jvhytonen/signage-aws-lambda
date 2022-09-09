@@ -46,7 +46,7 @@ function App() {
   }, [])
 
   return (
-    <div className="App h-full w-full">
+    <div className="App h-screen w-full">
       {apiData !== null ? <FlightDataTable data={apiData} /> : <Error message={`${isLoading ? 'Loading... ' : 'Something went wrong'}`} />}
     </div>
   );

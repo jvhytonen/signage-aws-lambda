@@ -1,17 +1,13 @@
 interface AirlineType {
-    airline: string[]
+    airline: string
 }
 
 const Airline = (props: AirlineType) => {
 
     return (
-        <div className='h-full w-full flex flex-col justify-center'>
-            {props.airline.map((arl, ind) => {
-                return (
-                    <p key={ind}>{arl}</p>
-                )
-            })}
-        </div>
+        <p>
+            {props.airline}
+        </p>
     )
 }
 export default Airline

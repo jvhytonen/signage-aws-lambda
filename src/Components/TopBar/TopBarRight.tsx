@@ -9,9 +9,7 @@ export interface ScheduleItemType {
     scheduledDeparture: string
     headsign: string
 }
-
 type scrollerType = (index: number) => void
-
 
 const TopBarRight = (props: SchedulesType) => {
     const div = useRef<HTMLDivElement | null>(null)
