@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import FlightDataTable from './Components/FlightDataTable/FlightDataTable'
+import View from './Components/View/View'
 import { fetchApiData } from './Utils/HTTPRequests'
 import Error from './Components/UI/Error'
 
@@ -47,7 +47,7 @@ function App() {
 
   return (
     <div className="App h-screen w-full">
-      {apiData !== null ? <FlightDataTable data={apiData} /> : <Error message={`${isLoading ? 'Loading... ' : 'Something went wrong'}`} />}
+      {apiData !== null ? <View data={apiData} /> : <Error message={`${isLoading ? 'Loading... ' : 'Something went wrong'}`} />}
     </div>
   );
 }

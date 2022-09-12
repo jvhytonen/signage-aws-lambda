@@ -5,7 +5,6 @@ const fetchNews = async (source) => {
    let apiUrl = `https://newsapi.org/v2/top-headlines?sources=${source}-news&apiKey=${apiKey.newsApiKey}`
     try {
         const response = await fetch(apiUrl);
-        console.log(response)
         return response.json();
     }
     catch(err){

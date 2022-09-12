@@ -7,7 +7,7 @@ export interface WeatherType {
 
 const Weather = (props: WeatherType) => {
     return (
-        <div className='w-full h-full'>
+        <div className='w-full h-full Weather'>
             <div className='w-full h-1/6 text-center text-3xl'>
                 <p>Weather in</p>
                 <p>{props.location}</p>

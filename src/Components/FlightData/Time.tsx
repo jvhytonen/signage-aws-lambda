@@ -14,7 +14,7 @@ const Time = (props: TimeType) => {
         detailText = props.type === 'departures' ? 'Departed ' : 'Landed '
     }
     else if (isEstimated) {
-        timeColor = 'bg-amber-400'
+        timeColor = 'bg-amber-300'
         detailText = 'Estimated '
     }
     else {
@@ -26,22 +26,22 @@ const Time = (props: TimeType) => {
         switch (type) {
             case 'departures':
                 return (
-                    <div className='w-full h-full max-h-full flex items-start justify-around'>
-                        <p className='w-[40%]'>{props.originalTime}</p>
-                        <p className={`w-[60%] ${timeColor}`}>{detailText}{props.estTime}</p>
+                    <div className='w-full h-full flex items-center justify-around'>
+                        <p className='w-[32%]'>{props.originalTime}</p>
+                        <p className={`w-[68%] h-full flex items-center ${timeColor}`}>{detailText}{props.estTime}</p>
                     </div>
                 )
             case 'arrivals':
                 return (
                     <div className='w-full h-full max-h-full flex items-start justify-around py-4'>
-                        <p className={`w-[40%] ${(props.estTime !== null && props.actualTime !== null) ? ' ' : ' line-through'}`}>{props.originalTime}</p>
-                        <p className={`w-[60%]${timeColor}`}>{props.estTime}</p>
+                        <p className={`w-[34%] ${(props.estTime !== null && props.actualTime !== null) ? ' ' : ' line-through'}`}>{props.originalTime}</p>
+                        <p className={`w-[66%]${timeColor}`}>{props.estTime}</p>
                     </div>
                 )
         }
     }
     return (
-        <div className='h-full w-full flex items-center justify-around px-4 text-xl'>
+        <div className='h-full w-full flex items-center justify-around px-2'>
             {renderType(props.type)}
         </div>
     )

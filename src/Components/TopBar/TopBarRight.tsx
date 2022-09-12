@@ -47,7 +47,7 @@ const TopBarRight = (props: SchedulesType) => {
     return (
         <div ref={div} className='flex flex-col'>
             {props.publicTransport.map((item, ind) => {
-                return <p key={ind} className='hidden h-full animate__animated'>{item.headsign} {item.scheduledDeparture}</p>
+                return <p key={ind} className='hidden h-full animate__animated ml-2'>{item.headsign} {item.scheduledDeparture}</p>
             })
             }
         </div>

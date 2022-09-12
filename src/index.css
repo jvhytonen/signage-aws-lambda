@@ -19,16 +19,37 @@ code {
     monospace;
 }
 
+.FlightDataTable {
+  font-family: Frutiger;
+  font-weight: bold;
+} 
+
 .FlightDataTable:nth-child(even) {
-  background-color: rgb(226 232 240);
+  background-color: #228EFF ;
 }
 
-.Table {
+.Topbar {
+  background-color: #003874 ;
+}
+
+.Timetable {
   font-size: 0.75rem;
 }
 
+.Weather {
+  background-image: linear-gradient(#F59E0B, #F8BD59);
+}
+
 /* This will hide the scrollbar in the timetables */
-.Table::-webkit-scrollbar { /* WebKit */
+.Timetable::-webkit-scrollbar { /* WebKit */
     width: 0;
     height: 0;
 } 
+
+.Righthalf {
+ background-color: #F1F5F9;
+}
+
+.Lefthalf {
+background-image: linear-gradient(#004A97 , #005BBB  );
+}
