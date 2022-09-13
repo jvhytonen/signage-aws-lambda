@@ -91,11 +91,11 @@ const handleCodeShareFlights = (flightObj, type) => {
         airline: AirlineIataToName(flightObj[i].airline_iata),
         flightNr: [[flightObj[i].flight_iata]],
         destination: IataToCity(flightObj[i].arr_iata),
-        depTime: formatDate(flightObj[i].dep_time),
-        actualDep: flightObj[i].dep_actual
+        scheduled: formatDate(flightObj[i].dep_time),
+        actual: flightObj[i].dep_actual
           ? formatDate(flightObj[i].dep_actual)
           : null,
-        estimatedDep: flightObj[i].dep_estimated
+        estimated: flightObj[i].dep_estimated
           ? formatDate(flightObj[i].dep_estimated)
           : null,
         terminal: flightObj[i].dep_terminal,
@@ -106,12 +106,12 @@ const handleCodeShareFlights = (flightObj, type) => {
       const AdminItem = {
         airline: AirlineIataToName(flightObj[i].airline_iata),
         flightNr: [[flightObj[i].flight_iata]],
-        depDestination: IataToCity(flightObj[i].dep_iata),
-        arrTime: formatDate(flightObj[i].arr_time),
-        actualArr: flightObj[i].arr_actual
+        destination: IataToCity(flightObj[i].dep_iata),
+        scheduled: formatDate(flightObj[i].arr_time),
+        actual: flightObj[i].arr_actual
           ? formatDate(flightObj[i].arr_actual)
           : null,
-        estimatedArr: flightObj[i].arr_estimated
+        estimated: flightObj[i].arr_estimated
           ? formatDate(flightObj[i].arr_estimated)
           : null,
         terminal: flightObj[i].arr_terminal,
@@ -187,7 +187,6 @@ const secondsToTime = (seconds) => {
 
 // For formatting public transport times.
 const formatPublicTransport = (transportArr) => {
-  console.log(transportArr.data.station.stoptimesWithoutPatterns[0])
     for (let i = 0; i < transportArr.data.station.stoptimesWithoutPatterns.length; i++){
       transportArr.data.station.stoptimesWithoutPatterns[i].scheduledDeparture = secondsToTime(transportArr.data.station.stoptimesWithoutPatterns[i].scheduledDeparture);
     }
