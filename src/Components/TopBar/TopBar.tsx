@@ -14,7 +14,7 @@ const TopBar = (props: TopBarType) => {
             </div>
             <div className='w-1/2 h-full flex items-center justify-center'>
                 <p className='mr-2'>Trains to city center: </p>
-                <TopBarRight publicTransport={props.publicTransport} />
+                {props.publicTransport && <TopBarRight publicTransport={props.publicTransport} />}
             </div>
         </div>
     )

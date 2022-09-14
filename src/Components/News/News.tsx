@@ -19,7 +19,7 @@ const News = (props: NewsType) => {
                 </div> */}
             </div>
             <div className='w-full h-full flex flex-col items-center justify-center mx-3'>
-                <p className='text-2xl'>{props.title}</p>
+                <p className='text-2xl uppercase'>{props.title}</p>
                 <p className='text-xl'>{props.description}</p>
             </div>
         </div>

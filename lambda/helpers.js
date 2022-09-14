@@ -45,19 +45,23 @@ const formatFlightData = async (data, timeLimit, type) => {
  *flightdata must be spliced into separate arrays each consisting 14 flights. Also the type of the
  *flight data (departures or arrivals) will be saved to be shown in the heading in the signage. 
  * 
- * @param {object} allFlights allflights previously formattedn. 
+ * @param {object} allFlights allflights previously formatted. 
  * @param {string} type type of flights: departures or arrivals
  * @return {array of objects} flight data spliced into an array of 14 items.
  */
-const groupTimeTables = (allFlights, type) => {
-    let groupedFlights = {}
-    let groupArr = []
-    while (allFlights.length) {
-      groupedFlights.onePage = allFlights.splice(0,15)
-      groupedFlights.type = type 
-      groupArr.push(groupedFlights)
-    }
-    return groupedFlights
+ const groupTimeTables = (allFlights, type) => {
+  let adjustedFlights = []
+  let adjustedFlightsWithTypes = []
+  while (allFlights.length) {
+      adjustedFlights.push(allFlights.splice(0,15))
+  }
+  for (const page of adjustedFlights) {
+    let onePage = {}
+    onePage.type = type
+    onePage.data = page
+    adjustedFlightsWithTypes.push(onePage)
+  }
+  return adjustedFlightsWithTypes
 }
 
 /**

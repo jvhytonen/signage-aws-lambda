@@ -7,10 +7,11 @@ import {NewsType} from '../News/News'
 import NewsContainer from '../News/NewsContainer';
 import Ads from '../Ads/Ads'
 import FlightData from '../FlightData/FlightData';
+import {TimeTableType} from '../FlightData/TimeTable'
 
 export interface AppType {
     body: {
-        departures: DepDataItemsType[][]
+        flights: TimeTableType[]
         arrivals: ArrDataItemsType[][]
         news: NewsType[]
         publicTransport: ScheduleItemType[]
@@ -30,7 +31,7 @@ const View = (props: ViewType) => {
             <div className='h-[92%] w-full flex shadow-md'>
                 <div className='w-1/2 h-full relative justify-around Lefthalf text-white'>
                     <div className='h-full w-full m-auto Timetable'>
-                        {props.data === undefined ? <h1>No data</h1> : <FlightData departures={props.data.body.departures} arrivals={props.data.body.arrivals} />}
+                        {props.data === undefined ? <h1>No data</h1> : <FlightData flights={props.data.body.flights} />}
                         {/* {props.data === undefined ? <h1>No data</h1> : <Arrivals data={props.data.arrivals} />} */}
                     </div>
                 </div>

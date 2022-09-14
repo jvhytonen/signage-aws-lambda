@@ -23,8 +23,8 @@ const NewsContainer = (props: NewsArrType) => {
     }, [currentInd, props.news])
 
     return (
-        <div className='w-full h-full flex'>
-            <div className='w-3/5 h-full'>
+        <div className='w-full h-full flex justify-between'>
+            <div className='w-[58%] h-full'>
                 <News
                     author={props.news[currentInd].author}
                     title={props.news[currentInd].title}
@@ -32,7 +32,7 @@ const NewsContainer = (props: NewsArrType) => {
                     urlToImage={props.news[currentInd].urlToImage}
                     publishedAt={props.news[currentInd].publishedAt} />
             </div>
-            <div className='w-2/5 h-full'>
+            <div className='w-[38%] h-full'>
                 <Weather location={'Helsinki'} temperature={12} weatherType={'overcast'} />
             </div>
         </div>
@@ -40,8 +40,3 @@ const NewsContainer = (props: NewsArrType) => {
 }
 
 export default NewsContainer
-
-
-{/* <div className='w-full h-[20%] bg-green-700 flex items-center'>
-<Weather location={'Helsinki'} temperature={12} weatherType={'overcast'} />
-</div> */}

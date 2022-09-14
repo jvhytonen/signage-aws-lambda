@@ -29,12 +29,12 @@ export interface ArrDataItemsType {
     baggage?: string
 }
 
-export interface FlightDataType {
+export interface TimeTableType {
     data: DepDataItemsType[] | ArrDataItemsType[]
     type: string
 }
 
-const TimeTable = (props: FlightDataType) => {
+const TimeTable = (props: TimeTableType) => {
     // Ref is used to get the height of the timetable area so that we can adjust the correct height for one flightitem:
     // In other words: we divide the whole height by amount of flights shown on one page.
     const div = useRef<HTMLDivElement | null>(null)
@@ -56,7 +56,7 @@ const TimeTable = (props: FlightDataType) => {
         return (
             <div ref={div} key={index} style={divHeightStyle} className={'FlightDataTable w-full flex h-[6%] text-3xl'}>
                 <div className='w-[36%] h-full flex items-center justify-center'>
-                    <Time originalTime={item.scheduled} estTime={item.estimated} actualTime={item.actual} type={props.type} />
+                    <Time scheduled={item.scheduled} estimated={item.estimated} actual={item.actual} type={props.type} />
                 </div>
                 <div className='w-[23%] flex items-center justify-start'>
                     <Airline airline={item.airline} />
