@@ -10,15 +10,11 @@ export interface NewsType {
 
 const News = (props: NewsType) => {
     return (
-        <div className='w-full h-full flex flex-col'>
-            <div className='w-full h-full'>
+        <div className='w-full h-full flex flex-col justify-between'>
+            <div className='w-full'>
                 <img src={props.urlToImage} alt='' />
-       {/*          <div className='w-full h-full flex justify-around'>
-                    <p>{props.author}</p>
-                    <p>{props.publishedAt}</p>
-                </div> */}
             </div>
-            <div className='w-full h-full flex flex-col items-center justify-center mx-3'>
+            <div className='w-full pt-3 px-3'>
                 <p className='text-2xl uppercase'>{props.title}</p>
                 <p className='text-xl'>{props.description}</p>
             </div>
@@ -26,12 +22,3 @@ const News = (props: NewsType) => {
     )
 }
 export default News
-/* 
-<div className='w-1/2 h-1/2 bg-red-600'>
-/* <img src={props.urlToImage} alt=''/> *
-/* </div>
-<div className='w-full h-1/2 bg-yellow-600'>
-    <h1>{props.title}</h1>
-    <p>{props.author}</p>
-    <p>{props.description}</p>
-</div> */

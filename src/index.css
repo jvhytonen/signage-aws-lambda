@@ -28,6 +28,11 @@ code {
   background-color: #228EFF ;
 }
 
+.News {
+  font-family: helvetica;
+  font-weight: bold;
+}
+
 .Topbar {
   background-color: #003874 ;
 }
@@ -47,9 +52,9 @@ code {
 } 
 
 .Righthalf {
- background-color: #F1F5F9;
+ background-image: linear-gradient(#fafaf9, #bae6fd);
 }
 
 .Lefthalf {
 background-image: linear-gradient(#004A97 , #005BBB  );
-}
+} 

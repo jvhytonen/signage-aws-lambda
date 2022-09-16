@@ -1,8 +1,6 @@
-import animateScrollTo from 'animated-scroll-to';
-import React, { useEffect, useRef, useState } from "react"
 import TopBar from "../TopBar/TopBar"
 import { ScheduleItemType } from '../TopBar/TopBarRight';
-import { DepDataItemsType, ArrDataItemsType } from '../FlightData/TimeTable';
+import {WeatherComponentType} from '../News/Weather'
 import {NewsType} from '../News/News'
 import NewsContainer from '../News/NewsContainer';
 import Ads from '../Ads/Ads'
@@ -12,9 +10,9 @@ import {TimeTableType} from '../FlightData/TimeTable'
 export interface AppType {
     body: {
         flights: TimeTableType[]
-        arrivals: ArrDataItemsType[][]
         news: NewsType[]
         publicTransport: ScheduleItemType[]
+        weather: WeatherComponentType
     }
 }
 export interface ViewType {
@@ -36,10 +34,10 @@ const View = (props: ViewType) => {
                     </div>
                 </div>
                 <div className='w-1/2 h-full flex flex-col justify-around items-center Righthalf'>
-                    <div className='h-full w-[93%] shadow-lg flex my-5'>
-                            <NewsContainer news={props.data.body.news} />
+                    <div className='h-[55%] w-[95%] shadow-lg flex my-5'>
+                            <NewsContainer news={props.data.body.news} weather={props.data.body.weather}/>
                     </div>
-                    <div className='h-full w-[93%] shadow-lg my-5'>
+                    <div className='h-[40%] w-[95%] shadow-lg my-5'>
                         <Ads adItems='Some Ads here'/>
                     </div>
                 </div>

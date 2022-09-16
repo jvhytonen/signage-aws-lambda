@@ -42,26 +42,24 @@ const formatFlightData = async (data, timeLimit, type) => {
 
 /**
  * The amount of visible fliths in the screen is 14 at the time. Therefore the 
- *flightdata must be spliced into separate arrays each consisting 14 flights. Also the type of the
- *flight data (departures or arrivals) will be saved to be shown in the heading in the signage. 
+ *flightdata must be spliced into separate arrays each consisting 14 flights.
  * 
- * @param {object} allFlights allflights previously formatted. 
- * @param {string} type type of flights: departures or arrivals
+ * @param {object} allFlights allflights previously formattedn. 
  * @return {array of objects} flight data spliced into an array of 14 items.
  */
- const groupTimeTables = (allFlights, type) => {
-  let adjustedFlights = []
-  let adjustedFlightsWithTypes = []
-  while (allFlights.length) {
-      adjustedFlights.push(allFlights.splice(0,15))
-  }
-  for (const page of adjustedFlights) {
-    let onePage = {}
-    onePage.type = type
-    onePage.data = page
-    adjustedFlightsWithTypes.push(onePage)
-  }
-  return adjustedFlightsWithTypes
+const groupTimeTables = (allFlights, type) => {
+    let adjustedFlights = []
+    let adjustedFlightsWithTypes = []
+    while (allFlights.length) {
+        adjustedFlights.push(allFlights.splice(0,15))
+    }
+    for (const page of adjustedFlights) {
+      let onePage = {}
+      onePage.type = type
+      onePage.data = page
+      adjustedFlightsWithTypes.push(onePage)
+    }
+    return adjustedFlightsWithTypes
 }
 
 /**
@@ -135,10 +133,13 @@ const mergeCodeShares = (codeShareFlights, adminFlights) => {
   for (let i = 0; i < codeShareFlights.length; i++) {
     let csItem = codeShareFlights[i].codeShareNr
     let flightNr = codeShareFlights[i].flightNr
+    let csAirline = AirlineIataToName(codeShareFlights[i].airline)
     adminFlights.forEach(item => {
       if (item.flightNr[0][0] === csItem) {
         const newNr = FormatArrays(item.flightNr, flightNr)
         item.flightNr = newNr
+        //const newAirline = FormatArrays(item.airline, csAirline)
+        //item.airline = newAirline
       }
     })
   }
@@ -154,7 +155,16 @@ const AirlineIataToName = iataCode => {
   const name = idx === -1 ? iataCode : airlines[idx].airline
   return name
 }
-
+/* 
+const FormatAirlines = (originalFlightArr, newFlightNr) => {
+  for (let i = 0; i < originalFlightArr.length; i++) {
+    if (originalFlightArr[i].length < 4) {
+      originalFlightArr.push(newFlightNr)
+      break
+    }
+  }
+  return originalFlightArr
+} */
 
 const FormatArrays = (originalArr, newItem) => {
   for (let i = 0; i < originalArr.length; i++) {
@@ -191,10 +201,11 @@ const secondsToTime = (seconds) => {
 
 // For formatting public transport times.
 const formatPublicTransport = (transportArr) => {
-    for (let i = 0; i < transportArr.data.station.stoptimesWithoutPatterns.length; i++){
-      transportArr.data.station.stoptimesWithoutPatterns[i].scheduledDeparture = secondsToTime(transportArr.data.station.stoptimesWithoutPatterns[i].scheduledDeparture);
+  let formattedPtData = transportArr.data.station.stoptimesWithoutPatterns
+    for (let i = 0; i < formattedPtData.length; i++){
+      formattedPtData[i].scheduledDeparture = secondsToTime(formattedPtData[i].scheduledDeparture);
     }
-    return transportArr
+    return formattedPtData
 }
 
 const formatNews = (news) => {
@@ -227,8 +238,43 @@ const formatNewsDate = (apiDate) => {
     return fullDate
 }
 
+/**
+ * This function picks the needed items from the object coming from weather API.
+ * 
+ * @param {object} rawData data coming from the API. 
+ * @return {string, object, object} location: name of the city, currentCond: data from the current moment, tomorrow: forecast for tomorrow. 
+ */
+
+const formatWeatherData = (rawData) => {
+    let currentCond = {}
+    let tomorrow = {}
+    let location = rawData.address
+    currentCond.temp = rawData.currentConditions.temp
+    currentCond.icon = removeHyphens(rawData.currentConditions.icon)
+    currentCond.description = rawData.currentConditions.conditions
+    //The API gives a forecast with one decimal, but for the forecast, nearest full integer is enough.
+    tomorrow.temp = Math.round(rawData.days[1].temp)
+    tomorrow.icon = removeHyphens(rawData.days[1].icon)
+    tomorrow.description = rawData.days[1].description
+    return {location, currentCond, tomorrow}
+}
+/**
+ * This function removes hyphens (-) from the value of the icon property partly-cloudy-day --> partlycloudyday
+ * so that it can be easier used with javaScript.
+ * 
+ * @param {string} data incoming data
+ * @returns data that has hyphens removed (if it has some)
+ */
+const removeHyphens = (data) => {
+  if (data.includes("-")) {
+    data = data.split("-").join("")
+  }
+  return data
+}
+
 module.exports = {
   formatFlightData,
   formatPublicTransport,
-  formatNews
+  formatNews,
+  formatWeatherData
 }

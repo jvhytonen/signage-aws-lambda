@@ -1,9 +1,10 @@
 import News, { NewsType } from "./News";
-import Weather from "./Weather";
+import Weather, {WeatherComponentType} from "./Weather";
 import { useEffect, useState } from 'react'
 
 interface NewsArrType {
     news: NewsType[]
+    weather: WeatherComponentType
 }
 
 const NewsContainer = (props: NewsArrType) => {
@@ -23,8 +24,8 @@ const NewsContainer = (props: NewsArrType) => {
     }, [currentInd, props.news])
 
     return (
-        <div className='w-full h-full flex justify-between'>
-            <div className='w-[58%] h-full'>
+        <div className='w-full min-h-full flex justify-between rounded News'>
+            <div className='w-[63%] min-h-full bg-gradient-to-b from-red-800 to-red-500 text-white'>
                 <News
                     author={props.news[currentInd].author}
                     title={props.news[currentInd].title}
@@ -32,8 +33,8 @@ const NewsContainer = (props: NewsArrType) => {
                     urlToImage={props.news[currentInd].urlToImage}
                     publishedAt={props.news[currentInd].publishedAt} />
             </div>
-            <div className='w-[38%] h-full'>
-                <Weather location={'Helsinki'} temperature={12} weatherType={'overcast'} />
+            <div className='w-[33%] h-full'>
+                <Weather {...props.weather} />
             </div>
         </div>
     )
