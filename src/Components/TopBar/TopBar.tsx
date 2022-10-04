@@ -12,10 +12,12 @@ const TopBar = (props: TopBarType) => {
             <div className='w-1/2 h-full flex items-center justify-around'>
                  <TopBarLeft />
             </div>
+            {props.publicTransport && 
             <div className='w-1/2 h-full flex items-center justify-center'>
                 <p className='mr-2'>Trains to city center: </p>
-                {props.publicTransport && <TopBarRight publicTransport={props.publicTransport} />}
+                <TopBarRight publicTransport={props.publicTransport} />
             </div>
+             }
         </div>
     )
 }
