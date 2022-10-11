@@ -155,16 +155,6 @@ const AirlineIataToName = iataCode => {
   const name = idx === -1 ? iataCode : airlines[idx].airline
   return name
 }
-/* 
-const FormatAirlines = (originalFlightArr, newFlightNr) => {
-  for (let i = 0; i < originalFlightArr.length; i++) {
-    if (originalFlightArr[i].length < 4) {
-      originalFlightArr.push(newFlightNr)
-      break
-    }
-  }
-  return originalFlightArr
-} */
 
 const FormatArrays = (originalArr, newItem) => {
   for (let i = 0; i < originalArr.length; i++) {
@@ -258,6 +248,7 @@ const formatWeatherData = (rawData) => {
     tomorrow.description = rawData.days[1].description
     return {location, currentCond, tomorrow}
 }
+
 /**
  * This function removes hyphens (-) from the value of the icon property partly-cloudy-day --> partlycloudyday
  * so that it can be easier used with javaScript.

@@ -1,5 +1,5 @@
 
-interface AdCardType {
+export interface AdCardType {
     url: string | undefined
 }
 

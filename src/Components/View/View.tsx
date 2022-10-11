@@ -13,7 +13,7 @@ export interface AppType {
         news: NewsType[]
         publicTransport: ScheduleItemType[]
         weather: WeatherComponentType
-        adsInfo?: any
+        adsInfo?: AdsInfoType[]
     }
 }
 export interface ViewType {
@@ -25,6 +25,7 @@ export interface ViewType {
 let info = [
     {
     type: 'info',
+    showtime: 3000,
     data: {
         heading: 'This is the heading',
         text: 'Hello worldd',
@@ -33,6 +34,7 @@ let info = [
 },
 {
     type: 'info',
+    showtime: 3000,
     data: {
         heading: 'This is the heading number 2',
         text: 'Hello worldd',
@@ -41,6 +43,7 @@ let info = [
 },
 {
     type: 'info',
+    showtime: 3000,
     data: {
         heading: 'This is the third',
         text: 'HelloAhaa worldadsadasdasdasd',
@@ -49,13 +52,12 @@ let info = [
 },
 {
     type: 'ad',
+    showtime: 3000,
     data: {
        url: 'https://i.giphy.com/media/h2CN7TlrNWxBCyUSqk/giphy.webp'
     }
 }
 ]
-
-
 
 const View = (props: ViewType) => {
  
@@ -75,7 +77,7 @@ const View = (props: ViewType) => {
                             <NewsContainer news={props.data.body.news} weather={props.data.body.weather}/>
                     </div>
                     <div className='h-[40%] w-[95%] shadow-lg my-5'>
-                        <AdsInfo info={info}/>
+                        {props.data.body.adsInfo && <AdsInfo info={props.data.body.adsInfo}/>}
                     </div>
                 </div>
             </div>
