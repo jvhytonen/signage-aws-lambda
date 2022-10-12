@@ -20,45 +20,6 @@ export interface ViewType {
     data: AppType
 }
 
-// For test purposes----------------------
-
-let info = [
-    {
-    type: 'info',
-    showtime: 3000,
-    data: {
-        heading: 'This is the heading',
-        text: 'Hello worldd',
-        bgColor: 'red-300'
-    },
-},
-{
-    type: 'info',
-    showtime: 3000,
-    data: {
-        heading: 'This is the heading number 2',
-        text: 'Hello worldd',
-        bgColor: 'red-300'
-    },
-},
-{
-    type: 'info',
-    showtime: 3000,
-    data: {
-        heading: 'This is the third',
-        text: 'HelloAhaa worldadsadasdasdasd',
-        bgColor: 'red-300'
-    },
-},
-{
-    type: 'ad',
-    showtime: 3000,
-    data: {
-       url: 'https://i.giphy.com/media/h2CN7TlrNWxBCyUSqk/giphy.webp'
-    }
-}
-]
-
 const View = (props: ViewType) => {
  
     return (
