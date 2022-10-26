@@ -1,8 +1,11 @@
-type fetchDataType = () => object | string
+type fetchDataType = (user:string) => object | string
 
-export const fetchApiData: fetchDataType = async () => {
+const API = 'https://4r294n67b7.execute-api.eu-north-1.amazonaws.com/dev/flight-data'
+
+export const fetchApiData: fetchDataType = async (user) => {
+    const URL = API + '/' + user
     try {
-        const response = await fetch('https://4r294n67b7.execute-api.eu-north-1.amazonaws.com/dev/flight-data')
+        const response = await fetch(URL)
         const data = await response.json()     
         return data
     }
@@ -11,8 +14,3 @@ export const fetchApiData: fetchDataType = async () => {
     return null
    }
 }
-
-/*
-const response = await fetch('https://4r294n67b7.execute-api.eu-north-1.amazonaws.com/dev/flight-data')
-const response = await fetch('http://localhost:3000/schedulesTEST.json')
-*/

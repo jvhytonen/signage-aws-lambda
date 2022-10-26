@@ -6,6 +6,8 @@ import Error from './Components/UI/Error'
 
 type connectAPIType = () => void
 
+const USER_NAME = 'test3'
+
 function App() {
   // Hooks handling API data and loading of data. 
   const [apiData, setApiData] = useState<any>(null)
@@ -14,7 +16,7 @@ function App() {
 
   const connectApi: connectAPIType = async () => {
     try {
-      const fetchedItems = await fetchApiData()
+      const fetchedItems = await fetchApiData(USER_NAME)
       if (fetchedItems === null) {
         return
       }
@@ -26,18 +28,18 @@ function App() {
       console.log('Something went wrong')
     }
   }
-/* 
-  useEffect(() => {
+ 
+/*   useEffect(() => {
     const intervalCall = setInterval(() => {
       setIsLoading(true)
-      console.log('connecting')
+      console.log('Timeout-made connection')
       connectApi();
     }, 20000)
     return () => {
       clearInterval(intervalCall)
     }
-  }, [])
- */
+  }, []) */
+
 
   useEffect(() => {
       setIsLoading(true)

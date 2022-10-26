@@ -37,8 +37,8 @@ const View = (props: ViewType) => {
                     <div className='h-[55%] w-[95%] shadow-lg flex my-5'>
                             <NewsContainer news={props.data.body.news} weather={props.data.body.weather}/>
                     </div>
-                    <div className='h-[40%] w-[95%] shadow-lg my-5'>
-                        {props.data.body.adsInfo && <AdsInfo info={props.data.body.adsInfo}/>}
+                    <div className='h-[40%] w-[95%] shadow-lg mt-5'>
+                        {props.data.body.adsInfo ? <AdsInfo info={props.data.body.adsInfo}/> : null}
                     </div>
                 </div>
             </div>

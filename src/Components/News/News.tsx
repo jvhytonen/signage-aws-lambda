@@ -10,13 +10,13 @@ export interface NewsType {
 
 const News = (props: NewsType) => {
     return (
-        <div className='w-full h-full flex flex-col justify-between'>
+        <div className='w-full h-full flex flex-col'>
             <div className='w-full'>
                 <img src={props.urlToImage} alt='' />
             </div>
             <div className='w-full pt-3 px-3'>
-                <p className='text-2xl uppercase'>{props.title}</p>
-                <p className='text-xl'>{props.description}</p>
+                <p className='text-3xl uppercase'>{props.title}</p>
+                <p className='text-2xl'>{props.description}</p>
             </div>
         </div>
     )

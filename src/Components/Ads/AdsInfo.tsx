@@ -8,16 +8,14 @@ export interface InformationType {
 export interface AdsInfoType {
     type: string
     data: {
-        heading?: string
-        text?: string
-        bgColor?: string
+        infoData?: string
         url?: string
     }
 }
 
 const AdsInfo = (props: InformationType) => {
     // This hard-coded index. SetTimeout and setCurrrentIndex need to be added next. 
-    let currentIndex = 2
+    let currentIndex = 0
 
     // A card with text OR an advertisement with an image will be displayed depending on what the user wants to show.   
     const renderType = (type: string) => {
@@ -26,9 +24,8 @@ const AdsInfo = (props: InformationType) => {
             case 'info':
                 return (
                     <InfoCard
-                    heading={props.info[currentIndex].data.heading}
-                    text={props.info[currentIndex].data.text}
-                    bgColor={props.info[currentIndex].data.bgColor} />
+                    infoData={props.info[currentIndex].data.infoData}
+                    />
                 )
             case 'ad':
                 return (
@@ -38,8 +35,8 @@ const AdsInfo = (props: InformationType) => {
     }
 
     return (
-        <div className='w-full max-h-full'>
-            {props.info && renderType(props.info[currentIndex].type)}
+        <div className='w-full max-h-full Info p-1'>
+            {props.info ? renderType(props.info[currentIndex].type) : null}
         </div>
     )
 }
