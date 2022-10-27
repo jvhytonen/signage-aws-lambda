@@ -8,7 +8,7 @@ const airports = require('./airports')
  * @param {number} timeLimit The time in seconds for the range of the scheduled fligths.
  * @return {object} formattedFlights object ready to be used in the browser.
  */
-const formatFlightData = async (data, timeLimit, type) => {
+export const formatFlightData = async (data, timeLimit, type) => {
   const withinTimeLimits = await getFlightsWithinTimeLimits(data, timeLimit)
   const formattedFlights = await handleCodeShareFlights(withinTimeLimits, type)
   const groupedFlights = await groupTimeTables(formattedFlights, type)
@@ -23,7 +23,7 @@ const formatFlightData = async (data, timeLimit, type) => {
  * @param {number} timeLimit The time in seconds for the range of the scheduled fligths.
  * @return {object} objWithLimit contains those flights fitting the time range.
  */
- const getFlightsWithinTimeLimits = (originalObj, timeLimit) => {
+ export const getFlightsWithinTimeLimits = (originalObj, timeLimit) => {
     const thisDate = new Date()
   // This server is located in Stockholm so we need to add additional 3600 seconds (1 hour) to show right schedules.
   const thisMoment = Math.round(thisDate.getTime() / 1000) + 3600
@@ -47,7 +47,7 @@ const formatFlightData = async (data, timeLimit, type) => {
  * @param {object} allFlights allflights previously formattedn. 
  * @return {array of objects} flight data spliced into an array of 14 items.
  */
-const groupTimeTables = (allFlights, type) => {
+ export const groupTimeTables = (allFlights, type) => {
     let adjustedFlights = []
     let adjustedFlightsWithTypes = []
     while (allFlights.length) {
@@ -70,7 +70,7 @@ const groupTimeTables = (allFlights, type) => {
  * @param {string} type The type of the schedule: Departure or Arrival
  * @return {object} mergedFlights codeshare flights merged to their administrative flight.
  */
-const handleCodeShareFlights = (flightObj, type) => {
+ export const handleCodeShareFlights = (flightObj, type) => {
   // Array for codeshare-flights.
   let codeShares = []
   // Array for the "metal" i.e.  administrative airline flight that really operates the flight.
@@ -127,7 +127,7 @@ const handleCodeShareFlights = (flightObj, type) => {
   return mergedFlights
 }
 
-const mergeCodeShares = (codeShareFlights, adminFlights) => {
+export const mergeCodeShares = (codeShareFlights, adminFlights) => {
   // The function will loop codeshare flights and finds their administrative host. All necessary data (flight number and airline) are
   // added to the object of the administrative flight.
   for (let i = 0; i < codeShareFlights.length; i++) {
@@ -148,7 +148,7 @@ const mergeCodeShares = (codeShareFlights, adminFlights) => {
 
 // This function will search the name of the airline based on the IATA-code.
 // Object has key: "AIRLINE IATA-code" value: "Airline name"
-const AirlineIataToName = iataCode => {
+export const AirlineIataToName = iataCode => {
   const idx = airlines.findIndex(item => {
     return item.iata === iataCode
   })
@@ -156,7 +156,7 @@ const AirlineIataToName = iataCode => {
   return name
 }
 
-const FormatArrays = (originalArr, newItem) => {
+export const FormatArrays = (originalArr, newItem) => {
   for (let i = 0; i < originalArr.length; i++) {
     if (originalArr[i].length === 4) {
       continue
@@ -171,101 +171,14 @@ const FormatArrays = (originalArr, newItem) => {
   return originalArr
 }
 
-const IataToCity = iataCode => {
+export const IataToCity = iataCode => {
   return airports[iataCode]
 }
 
-const formatDate = date => {
+export const formatDate = date => {
   return date.slice(-5)
-}
-
-const secondsToTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    let minutes = (seconds % 3600) / 60;
-    if (minutes < 10) {
-        minutes = "0" + minutes.toString()
-    }
-    const time = hours.toString() + ':' + minutes.toString();
-    return time
-}
-
-// For formatting public transport times.
-const formatPublicTransport = (transportArr) => {
-  let formattedPtData = transportArr.data.station.stoptimesWithoutPatterns
-    for (let i = 0; i < formattedPtData.length; i++){
-      formattedPtData[i].scheduledDeparture = secondsToTime(formattedPtData[i].scheduledDeparture);
-    }
-    return formattedPtData
-}
-
-const formatNews = (news) => {
-  const formattedNews = news.articles.map(o => ({ ...o, publishedAt: formatNewsDate(o.publishedAt) }))
-  
- // console.log(formattedNews)
-  return formattedNews
-}
-
-// This is used in formatNewsDate -function
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-/**
- * This function will format the date shown in the News-component.
- * 
- * @param {string} apiDate date coming from the API. 
- * @return {string} fullDate a string with only day, month, hours and minutes in clean order.
- */
-const formatNewsDate = (apiDate) => {
-    let incomingDate = new Date(apiDate)
-    // Adding two hours in seconds to the time for being in Finland. 
-    let localTime = new Date(incomingDate.getTime() + 7200)
-    // The short name of the month in english from the array.
-    let month = MONTHS[localTime.getMonth()]
-    // We must add extra 0 to the time and days if they are under 10 because it looks better. 
-    let day = localTime.getDate() < 10 ? "0" + localTime.getDate() : localTime.getDate() 
-    let hours = localTime.getHours() < 10 ? "0"+ localTime.getHours() : localTime.getHours()
-    let minutes = localTime.getMinutes() < 10 ? "0"+localTime.getMinutes() : localTime.getMinutes()
-    let fullDate = month + ' ' + day + ' - ' + hours + ':' + minutes
-    return fullDate
-}
-
-/**
- * This function picks the needed items from the object coming from weather API.
- * 
- * @param {object} rawData data coming from the API. 
- * @return {string, object, object} location: name of the city, currentCond: data from the current moment, tomorrow: forecast for tomorrow. 
- */
-
-const formatWeatherData = (rawData) => {
-    let currentCond = {}
-    let tomorrow = {}
-    let location = rawData.address
-    currentCond.temp = rawData.currentConditions.temp
-    currentCond.icon = removeHyphens(rawData.currentConditions.icon)
-    currentCond.description = rawData.currentConditions.conditions
-    //The API gives a forecast with one decimal, but for the forecast, nearest full integer is enough.
-    tomorrow.temp = Math.round(rawData.days[1].temp)
-    tomorrow.icon = removeHyphens(rawData.days[1].icon)
-    tomorrow.description = rawData.days[1].description
-    return {location, currentCond, tomorrow}
-}
-
-/**
- * This function removes hyphens (-) from the value of the icon property partly-cloudy-day --> partlycloudyday
- * so that it can be easier used with javaScript.
- * 
- * @param {string} data incoming data
- * @returns data that has hyphens removed (if it has some)
- */
-const removeHyphens = (data) => {
-  if (data.includes("-")) {
-    data = data.split("-").join("")
-  }
-  return data
 }
 
 module.exports = {
   formatFlightData,
-  formatPublicTransport,
-  formatNews,
-  formatWeatherData
 }
