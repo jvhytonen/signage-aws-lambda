@@ -1,4 +1,12 @@
 
+/**
+ * Seconds-toTime converts seconds passed from midnight into a "human friendly" time "HH:MM".
+ * This is used to show departure times of the public transport. 
+ * 
+ * @param {number} seconds Seconds from midnight. 
+ * @return {string} time clock time in HH:MM -format. 
+ */
+
 export const secondsToTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     let minutes = (seconds % 3600) / 60;
@@ -9,16 +17,26 @@ export const secondsToTime = (seconds) => {
     return time
 }
 
-// For formatting public transport times.
-export const formatPublicTransport = (transportArr) => {
-    let formattedPtData = transportArr.data.station.stoptimesWithoutPatterns
+/**
+ * Departure-times of the public transport must be converted into a human friendly time format.
+ * 
+ * @param {object} transportObj containing data about public transport.
+ * @return {array} The same array with converted departure times. 
+ */
+export const formatPublicTransport = (transportObj) => {
+    let formattedPtData = transportObj.data.station.stoptimesWithoutPatterns
       for (let i = 0; i < formattedPtData.length; i++){
         formattedPtData[i].scheduledDeparture = secondsToTime(formattedPtData[i].scheduledDeparture);
       }
       return formattedPtData
   }
-  
-  const formatNews = (news) => {
+/**
+ * 
+ * @param {object} news object containing news from newsAPI. The publish time-string from API is ugly. It must be formatted.
+ * @returns {object} formattedNews -object with formatted publish times. 
+ */  
+
+export const formatNews = (news) => {
     const formattedNews = news.articles.map(o => ({ ...o, publishedAt: formatNewsDate(o.publishedAt) }))
     return formattedNews
   }
