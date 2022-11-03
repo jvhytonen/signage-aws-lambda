@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import View from './Components/View/View'
-import { fetchApiData } from './Utils/HTTPRequests'
+import { fetchApiData, mockFetch } from './Utils/HTTPRequests'
 import Error from './Components/UI/Error'
 
 type connectAPIType = () => void
@@ -16,7 +16,7 @@ function App() {
 
   const connectApi: connectAPIType = async () => {
     try {
-      const fetchedItems = await fetchApiData(USER_NAME)
+      const fetchedItems = await mockFetch(USER_NAME)
       if (fetchedItems === null) {
         return
       }
@@ -39,6 +39,7 @@ function App() {
       clearInterval(intervalCall)
     }
   }, []) */
+
 
 
   useEffect(() => {

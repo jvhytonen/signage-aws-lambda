@@ -5,7 +5,7 @@ export const exmplWeatherApiData = {
     "latitude": 60.1712,
     "longitude": 24.9327,
     "resolvedAddress": "Helsinki, Etelä-Suomi, Suomi",
-    "address": "helsinki",
+    "address": "Helsinki",
     "timezone": "Europe/Helsinki",
     "tzoffset": 3,
     "description": "Similar temperatures continuing with a chance of rain tomorrow & Friday.",
@@ -275,7 +275,7 @@ export const exmplWeatherApiData = {
    }
 
 export const exmplFormattedWeatherData  = {
-    location: 'helsinki',
+    location: 'Helsinki',
     currentCond: {
         temp: 10.5,
         icon: 'partlycloudyday',

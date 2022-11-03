@@ -25,7 +25,8 @@ const Weather = (props: WeatherComponentType) => {
             <div className='w-full h-[40%]'>
                 <p className='text-3xl text-center'>Current:</p>
                 <div className='w-full h-[90%] flex items-center justify-around'>
-                    <img src={iconCurrent} alt='' width='30%' height='30%' />
+                    {/* aria-label must be placed here for tests to run succesfully*/}
+                    <img src={iconCurrent} aria-label={props.currentCond.icon} alt='' width='30%' height='30%' />
                     <p className='text-4xl'>{props.currentCond.temp} &#8451;</p>
                 </div>
             </div>

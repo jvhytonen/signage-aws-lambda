@@ -1,6 +1,6 @@
 import { it, expect, describe } from 'vitest'
 
-import { AirlineIataToName, IataToCity } from './flight-data-helpers'
+import { AirlineIataToName, IataToCity, formatDate } from './flight-data-helpers'
 
 describe('AirlineIataToName()', () => {
     it('should return United Airlines with its IATA-code', () => {
@@ -31,3 +31,15 @@ describe('IataToCity()', () => {
     expect(result).toBe(city)
    })
 }) 
+
+describe('formatDate()', () => {
+    it('should remove extra characters from date not needed in the client', () => {
+        const time = '2022-04-14 11:35'
+        const sliced = '11:35'
+
+        const result = formatDate(time)
+
+        expect(result).toBe(sliced)
+    })
+ }) 
+ 

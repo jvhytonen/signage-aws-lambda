@@ -9,6 +9,8 @@ const TopBarLeft = () => {
     const [time, setTime] = useState<string>()
 
     const createTopBarDate: createTopBarDateType = () => {
+        //This function creates a date to the topbar and updates it every minute. 
+        // It creates the right suffix based on the day: "1st or 5th etc.".
         let now = new Date()
         let weekDay = DAYS[now.getDay()]
         let monthDay = now.getDate()
@@ -45,7 +47,7 @@ const TopBarLeft = () => {
 
     return (
        <div>
-          {time}
+         {time}
        </div>
     )
 }

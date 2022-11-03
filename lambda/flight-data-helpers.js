@@ -171,10 +171,12 @@ export const FormatArrays = (originalArr, newItem) => {
   return originalArr
 }
 
+// Converts Airport IATA Code to its' name.
 export const IataToCity = iataCode => {
   return airports[iataCode]
 }
 
+// Removes year, month and day from FlightDataAPI-schedules. Leaves only time. 
 export const formatDate = date => {
   return date.slice(-5)
 }

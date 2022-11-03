@@ -2,7 +2,7 @@ import TopBarRight, { ScheduleItemType } from './TopBarRight'
 import TopBarLeft from './TopBarLeft'
 
 interface TopBarType {
-    publicTransport: ScheduleItemType[]
+    publicTransport?: ScheduleItemType[]
 }
 
 const TopBar = (props: TopBarType) => {
