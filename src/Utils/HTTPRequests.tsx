@@ -19,6 +19,8 @@ export const fetchApiData: fetchDataType = async (user) => {
    }
 }
 
+// For development purposes in order not to use API-calls all the time. 
+
 export const mockFetch: fetchDataType = async (user) => {
     const data = {
             body: {

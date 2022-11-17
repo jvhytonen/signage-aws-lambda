@@ -12,6 +12,7 @@ test('it is showing a current day and month in the left topbar', () => {
     const thisMonth = MONTHS[testDate.getMonth()]
     const topBarDay = screen.getByText(today, {exact: false})
     const topBarMonth = screen.getByText(thisMonth, {exact: false})
+    
     expect(topBarDay).toBeInTheDocument()
     expect(topBarMonth).toBeInTheDocument()
 })

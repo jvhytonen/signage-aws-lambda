@@ -151,7 +151,7 @@ export const AirlineIataToName = iataCode => {
   const idx = airlines.findIndex(item => {
     return item.iata === iataCode
   })
-  // findIndex returns the the index number where IATA-code is found. If no code is found, the IATA-code remains. 
+  // findIndex below returns the the index number where IATA-code is found. If no code is found, it returns -1 and the IATA-code remains. 
   const name = idx === -1 ? iataCode : airlines[idx].airline
   return name
 }

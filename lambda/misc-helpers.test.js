@@ -42,8 +42,6 @@ describe('formatNewsDate()', () => {
 
 describe('secondsToTime()', () => {
     it('should convert seconds from midnight to time in format HH:MM', () => {
-  //      const original = ['40800', '41160', '4200']
-  //      const ready = ['11:20', '11:26', '11:40']
         const sinceMidNight = 40800
         const clockTime = '11:20'
 
