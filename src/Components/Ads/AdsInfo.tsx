@@ -7,10 +7,8 @@ export interface InformationType {
 
 export interface AdsInfoType {
     type: string
-    data: {
-        infoData?: string
-        url?: string
-    }
+    infoData?: string
+    url?: string
 }
 
 const AdsInfo = (props: InformationType) => {
@@ -24,12 +22,12 @@ const AdsInfo = (props: InformationType) => {
             case 'info':
                 return (
                     <InfoCard
-                    infoData={props.info[currentIndex].data.infoData}
+                    infoData={props.info[currentIndex].infoData}
                     />
                 )
             case 'ad':
                 return (
-                    <AdCard url={props.info[currentIndex].data.url} />
+                    <AdCard url={props.info[currentIndex].url} />
                 )
         }
     }

@@ -10,7 +10,7 @@ import Error from "../UI/Error";
 
 export interface AppType {
     body: {
-        flights: TimeTableType[]
+        flights?: TimeTableType[]
         news?: NewsType[]
         publicTransport: ScheduleItemType[]
         weather: WeatherComponentType
@@ -31,7 +31,7 @@ const View = (props: ViewType) => {
             <div className='h-[92%] w-full flex shadow-md'>
                 <div className='w-1/2 h-full relative justify-around Lefthalf text-white'>
                     <div className='h-full w-full m-auto Timetable'>
-                        {props.data.body.flights === undefined ? <Error message={"No data"}/> : <FlightData flights={props.data.body.flights} />}
+                        {props.data.body.flights ? <FlightData flights={props.data.body.flights} /> : <Error message={"No data"}/>}
                     </div>
                 </div>
                 <div className='w-1/2 h-full flex flex-col justify-around items-center Righthalf'>

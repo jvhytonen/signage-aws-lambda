@@ -2,6 +2,7 @@ import TopBar from "./TopBar";
 import { exmplPTReadyData } from '../../tests/public-transport-test-data'
 import { render, screen } from '@testing-library/react'
 
+
 it('shows Trains to city center text if public transport data is delivered', () => {
     render(<TopBar publicTransport={exmplPTReadyData} />)
     

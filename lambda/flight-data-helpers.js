@@ -133,7 +133,6 @@ export const mergeCodeShares = (codeShareFlights, adminFlights) => {
   for (let i = 0; i < codeShareFlights.length; i++) {
     let csItem = codeShareFlights[i].codeShareNr
     let flightNr = codeShareFlights[i].flightNr
-    let csAirline = AirlineIataToName(codeShareFlights[i].airline)
     adminFlights.forEach(item => {
       if (item.flightNr[0][0] === csItem) {
         const newNr = FormatArrays(item.flightNr, flightNr)
@@ -152,6 +151,7 @@ export const AirlineIataToName = iataCode => {
   const idx = airlines.findIndex(item => {
     return item.iata === iataCode
   })
+  // findIndex returns the the index number where IATA-code is found. If no code is found, the IATA-code remains. 
   const name = idx === -1 ? iataCode : airlines[idx].airline
   return name
 }

@@ -27,3 +27,4 @@ it('shows no "No data" at all when both Weather and News components are delivere
     const noDataText = screen.queryByText('No data')
     expect(noDataText).not.toBeInTheDocument()
 })
+
