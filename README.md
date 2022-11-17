@@ -11,4 +11,4 @@ It will fetch all the data the client (digital signage) need and shapes the data
 
 You can't. The code is in the cloud and it needs the serverless environment to work. This is just a sample repo to show what kind of code there is. 
 
-
+You can see front-end improvement from the old commits, but this is only cloned repo from the original. You can see the front-end code in another repo. 
