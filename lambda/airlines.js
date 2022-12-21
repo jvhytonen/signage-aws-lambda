@@ -657,7 +657,7 @@ module.exports = [
     },
     {
      iata: "CL",
-     airline: "Lufthansa CityLine"
+     airline: "Lufthansa CL"
     },
     {
      iata: "LG",
@@ -730,6 +730,10 @@ module.exports = [
     {
      iata: "DY",
      airline: "Norwegian"
+    },
+    {
+      iata: "OJ",
+      airline: "Nyxair"
     },
     {
      iata: "OA",
@@ -885,7 +889,7 @@ module.exports = [
     },
     {
      iata: "FS",
-     airline: "SYPHAX AIRLINES"
+     airline: "Syphax Airlines"
     },
     {
      iata: "RB",

@@ -8,7 +8,7 @@ const airports = require('./airports')
  * @param {number} timeLimit The time in seconds for the range of the scheduled fligths.
  * @return {object} formattedFlights object ready to be used in the browser.
  */
-export const formatFlightData = async (data, timeLimit, type) => {
+const formatFlightData = async (data, timeLimit, type) => {
   const withinTimeLimits = await getFlightsWithinTimeLimits(data, timeLimit)
   const formattedFlights = await handleCodeShareFlights(withinTimeLimits, type)
   const groupedFlights = await groupTimeTables(formattedFlights, type)
@@ -23,21 +23,21 @@ export const formatFlightData = async (data, timeLimit, type) => {
  * @param {number} timeLimit The time in seconds for the range of the scheduled fligths.
  * @return {object} objWithLimit contains those flights fitting the time range.
  */
- export const getFlightsWithinTimeLimits = (originalObj, timeLimit) => {
-    const thisDate = new Date()
-  // This server is located in Stockholm so we need to add additional 3600 seconds (1 hour) to show right schedules.
-  const thisMoment = Math.round(thisDate.getTime() / 1000) + 3600
-   
-  const objWithLimits = []
+const getFlightsWithinTimeLimits = (originalObj, timeLimit) => {
+  const thisDate = new Date()
+// This server is located in Stockholm so we need to add additional 3600 seconds (1 hour) to show right schedules.
+const thisMoment = Math.round(thisDate.getTime() / 1000) + 3600
+ 
+const objWithLimits = []
 
-  for (let i = 0; i < originalObj.length; i++) {
-   if (originalObj[i].dep_time_ts - thisMoment < timeLimit) {
-     if ((!originalObj[i].hasOwnProperty('dep_actual_ts')) || thisMoment - originalObj[i].dep_actual_ts < 7200) {
-       objWithLimits.push(originalObj[i]) 
-      } 
-    }
+for (let i = 0; i < originalObj.length; i++) {
+ if (originalObj[i].dep_time_ts - thisMoment < timeLimit) {
+   if ((!originalObj[i].hasOwnProperty('dep_actual_ts')) || thisMoment - originalObj[i].dep_actual_ts < 7200) {
+     objWithLimits.push(originalObj[i]) 
+    } 
   }
-  return objWithLimits
+}
+return objWithLimits
 }
 
 /**
@@ -47,19 +47,19 @@ export const formatFlightData = async (data, timeLimit, type) => {
  * @param {object} allFlights allflights previously formattedn. 
  * @return {array of objects} flight data spliced into an array of 14 items.
  */
- export const groupTimeTables = (allFlights, type) => {
-    let adjustedFlights = []
-    let adjustedFlightsWithTypes = []
-    while (allFlights.length) {
-        adjustedFlights.push(allFlights.splice(0,15))
-    }
-    for (const page of adjustedFlights) {
-      let onePage = {}
-      onePage.type = type
-      onePage.data = page
-      adjustedFlightsWithTypes.push(onePage)
-    }
-    return adjustedFlightsWithTypes
+ const groupTimeTables = (allFlights, type) => {
+  let adjustedFlights = []
+  let adjustedFlightsWithTypes = []
+  while (allFlights.length) {
+      adjustedFlights.push(allFlights.splice(0,15))
+  }
+  for (const page of adjustedFlights) {
+    let onePage = {}
+    onePage.type = type
+    onePage.data = page
+    adjustedFlightsWithTypes.push(onePage)
+  }
+  return adjustedFlightsWithTypes
 }
 
 /**
@@ -70,7 +70,7 @@ export const formatFlightData = async (data, timeLimit, type) => {
  * @param {string} type The type of the schedule: Departure or Arrival
  * @return {object} mergedFlights codeshare flights merged to their administrative flight.
  */
- export const handleCodeShareFlights = (flightObj, type) => {
+const handleCodeShareFlights = (flightObj, type) => {
   // Array for codeshare-flights.
   let codeShares = []
   // Array for the "metal" i.e.  administrative airline flight that really operates the flight.
@@ -101,7 +101,8 @@ export const formatFlightData = async (data, timeLimit, type) => {
           ? formatDate(flightObj[i].dep_estimated)
           : null,
         terminal: flightObj[i].dep_terminal,
-        gate: flightObj[i].dep_gate
+        gate: flightObj[i].dep_gate,
+        status: flightObj[i].status
       }
       admins.push(AdminItem)
     } else if (type === 'arrivals') {
@@ -117,7 +118,8 @@ export const formatFlightData = async (data, timeLimit, type) => {
           ? formatDate(flightObj[i].arr_estimated)
           : null,
         terminal: flightObj[i].arr_terminal,
-        baggage: flightObj[i].arr_baggage
+        baggage: flightObj[i].arr_baggage,
+        status: flightObj[i].status
       }
       admins.push(AdminItem)
     }
@@ -127,7 +129,7 @@ export const formatFlightData = async (data, timeLimit, type) => {
   return mergedFlights
 }
 
-export const mergeCodeShares = (codeShareFlights, adminFlights) => {
+const mergeCodeShares = (codeShareFlights, adminFlights) => {
   // The function will loop codeshare flights and finds their administrative host. All necessary data (flight number and airline) are
   // added to the object of the administrative flight.
   for (let i = 0; i < codeShareFlights.length; i++) {
@@ -135,10 +137,7 @@ export const mergeCodeShares = (codeShareFlights, adminFlights) => {
     let flightNr = codeShareFlights[i].flightNr
     adminFlights.forEach(item => {
       if (item.flightNr[0][0] === csItem) {
-        const newNr = FormatArrays(item.flightNr, flightNr)
-        item.flightNr = newNr
-        //const newAirline = FormatArrays(item.airline, csAirline)
-        //item.airline = newAirline
+        item.flightNr[0].push(flightNr)
       }
     })
   }
@@ -147,37 +146,21 @@ export const mergeCodeShares = (codeShareFlights, adminFlights) => {
 
 // This function will search the name of the airline based on the IATA-code.
 // Object has key: "AIRLINE IATA-code" value: "Airline name"
-export const AirlineIataToName = iataCode => {
+const AirlineIataToName = iataCode => {
   const idx = airlines.findIndex(item => {
     return item.iata === iataCode
   })
-  // findIndex below returns the the index number where IATA-code is found. If no code is found, it returns -1 and the IATA-code remains. 
   const name = idx === -1 ? iataCode : airlines[idx].airline
   return name
 }
 
-export const FormatArrays = (originalArr, newItem) => {
-  for (let i = 0; i < originalArr.length; i++) {
-    if (originalArr[i].length === 4) {
-      continue
-    }
-    if (originalArr[i].length < 4) {
-      originalArr[i].push(newItem)
-    }
-    if (i === originalArr.length - 1 && originalArr[i].length === 4) {
-      originalArr.push([newItem])
-    }
-  }
-  return originalArr
-}
-
 // Converts Airport IATA Code to its' name.
-export const IataToCity = iataCode => {
+const IataToCity = iataCode => {
   return airports[iataCode]
 }
 
 // Removes year, month and day from FlightDataAPI-schedules. Leaves only time. 
-export const formatDate = date => {
+const formatDate = date => {
   return date.slice(-5)
 }
 

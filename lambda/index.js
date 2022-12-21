@@ -1,38 +1,40 @@
-const settingsFn = require('./get-settings')
-const PT = require('./get-public-transport');
-const getFlights = require('./get-flight-item');
-const news = require('./get-news')
-const weather = require('./get-weather')
-const flightHelpers = require('./flight-data-helpers')
+const settingsFn = require('./getSettings')
+const PT = require('./getPublicTransport');
+const getFlights = require('./getFlightItem');
+const news = require('./getNews')
+const weather = require('./getWeather')
 const miscHelpers = require('./misc-helpers')
-
-
-/**
- * Lambda-function index.js in AWS Cloud. 
- * 
- * @param {event} event Event triggering the function.
- * @return {object} response object containing fetched data ready to be shown in the browser.
- */
+const flightDataHelpers = require('./flight-data-helpers')
 
 exports.handler = async (event, callback) => {
-    // We fetch data from database via another Lambda function. Temporarily a hard-coded value of username is used before AWS API Gateway Query params is implemented. 
-    // Username will be received later from event-object 
-   const settings = await settingsFn.getUserSettings('tester')
-   // We return this data-object back to the client. 
+   const settings = await settingsFn.getUserSettings(event.user)
+   if (settings === undefined) {
+       const response = {
+           statusCode: 404,
+           body: 'Error! No user found'
+       }
+       return response
+   }
+   // Data will be stored to data-object.
    const data = {}
+   // If the chosen city is Helsinki. The train shedules to city center from the airport station will be fetched. 
+   // Settings object has a boolean value for showPublicTransport.
+   if (settings.showPublicTransport) {
+    try {
+     const publicTransportData = await PT.fetchTrains();
+     const formattedPublicTransport = await miscHelpers.formatPublicTransport(publicTransportData)
+     data.publicTransport = formattedPublicTransport
+    }
+    catch(err) {
+     data.publicTransport = null
+    }
+   }
    // Getting flight schedules from api 
    const dep = await getFlights.getItem(settings.airport, 'dep');
    const arr = await getFlights.getItem(settings.airport, 'arr');
-   // We format flight schedules and strip away all unnecessary information.
-   const formattedDepartures = await flightHelpers.formatFlightData(dep.response, 7200, 'departures')
-   const formattedArrivals = await flightHelpers.formatFlightData(arr.response, 7200, 'arrivals')
-   // If the chosen city is Helsinki. There is a possibility to fetch train shedules to city center. 
-   // Settings object has a boolean value for showPublicTransport.
-   if (settings.showPublicTransport) {
-    const publicTransportData = await PT.fetchTrains();
-    const formattedPublicTransport = await miscHelpers.formatPublicTransport(publicTransportData)
-    data.publicTransport = formattedPublicTransport
-   }
+  // We format flight schedules and strip away all unnecessary information.
+   const formattedDepartures = await flightDataHelpers.formatFlightData(dep.response, settings.timeLimit, 'departures')
+   const formattedArrivals = await flightDataHelpers.formatFlightData(arr.response, settings.timeLimit, 'arrivals')
    // Fetch and format news. Settings object has a source for news (BBC, Financial Times etc.)
    const newsItems = await news.fetchNews(settings.newsSource);
    const formattedNews = await miscHelpers.formatNews(newsItems)

@@ -15,8 +15,8 @@ const data = await fetch('https://api.digitransit.fi/routing/v1/routers/hsl/inde
 }`,
     headers: { "Content-Type": "application/graphql" },
 })
-const fetchedPublicTransport = data.json()
-return fetchedPublicTransport
+const parsedData = await data.json()
+return parsedData
 }
 
 module.exports = {

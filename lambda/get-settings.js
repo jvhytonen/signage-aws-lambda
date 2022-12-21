@@ -4,7 +4,6 @@ const lambda = new aws.Lambda({
 })
 
 const getUserSettings = async (userName) => {
-    console.log('Get User Settings fired')
     
   let params = {
     FunctionName: 'signage-get-settings',
@@ -12,8 +11,6 @@ const getUserSettings = async (userName) => {
   }
   try {
     const data = await lambda.invoke(params).promise()
-    console.log('Invoked')
-    console.log('Success')
     const result = JSON.parse(data.Payload)
     return result.body
   } catch(err) {

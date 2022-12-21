@@ -6,7 +6,6 @@ Parameters:
 event: string that holds the username.
 """
 
-
 import boto3
 import json
 from variables import table_name
