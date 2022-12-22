@@ -820,6 +820,10 @@ module.exports = [
      airline: "SAS"
     },
     {
+      iata: "SL",
+      airline: "SAS"
+    },
+    {
      iata: "SP",
      airline: "SATA Air Açores"
     },
@@ -990,6 +994,10 @@ module.exports = [
     {
      iata: "HY",
      airline: "Uzbekistan Airways"
+    },
+    {
+      iata: "RP",
+      airline: "Karhu Aero"
     },
     {
      iata: "VN",

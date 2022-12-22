@@ -10,9 +10,27 @@ const airports = require('./airports')
  */
 const formatFlightData = async (data, timeLimit, type) => {
   const withinTimeLimits = await getFlightsWithinTimeLimits(data, timeLimit)
-  const formattedFlights = await handleCodeShareFlights(withinTimeLimits, type)
-  const groupedFlights = await groupTimeTables(formattedFlights, type)
+  // The API sorts data by estimated time, we want to show it based on scheduled time.
+  const sortedByTime = await sortByTime(withinTimeLimits, type)
+  // We find codeshare flights and the "real" admin flights
+  const codeShareFlights = await findCodeShares(sortedByTime)
+  const adminFlights = await findAdmins(sortedByTime, type)
+  // Codeshares merged with admins.
+  const formattedFlights = await mergeCodeShares(codeShareFlights, adminFlights)
+  // We want to show max 15 flights per page. 
+  const groupedFlights = await stackTimeTables(formattedFlights, type)
   return groupedFlights
+}
+
+const sortByTime = (flightObj, type) => {
+  //The dep_time_ts is the original scheduled time in epoch-format. Therefore we sort the data based on that. 
+  if (type === 'departures') {
+    flightObj.sort((a, b) => (a.dep_time_ts > b.dep_time_ts) ? 1: -1)
+  }
+  if (type === 'arrivals') {
+    flightObj.sort((a, b) => (a.arr_time_ts > b.arr_time_ts) ? 1: -1)
+  }
+  return flightObj
 }
 
 /**
@@ -27,9 +45,7 @@ const getFlightsWithinTimeLimits = (originalObj, timeLimit) => {
   const thisDate = new Date()
 // This server is located in Stockholm so we need to add additional 3600 seconds (1 hour) to show right schedules.
 const thisMoment = Math.round(thisDate.getTime() / 1000) + 3600
- 
 const objWithLimits = []
-
 for (let i = 0; i < originalObj.length; i++) {
  if (originalObj[i].dep_time_ts - thisMoment < timeLimit) {
    if ((!originalObj[i].hasOwnProperty('dep_actual_ts')) || thisMoment - originalObj[i].dep_actual_ts < 7200) {
@@ -41,18 +57,19 @@ return objWithLimits
 }
 
 /**
- * The amount of visible fliths in the screen is 14 at the time. Therefore the 
- *flightdata must be spliced into separate arrays each consisting 14 flights.
+ * The amount of visible fliths in the screen is 15 at the time. Therefore the 
+ *flightdata must be spliced into separate arrays each consisting 15 flights.
  * 
  * @param {object} allFlights allflights previously formattedn. 
  * @return {array of objects} flight data spliced into an array of 14 items.
  */
- const groupTimeTables = (allFlights, type) => {
+ const stackTimeTables = (allFlights, type) => {
   let adjustedFlights = []
   let adjustedFlightsWithTypes = []
   while (allFlights.length) {
       adjustedFlights.push(allFlights.splice(0,15))
   }
+  // Type of the page is "Departures" or "Arrivals". This word will be shown above flight data. 
   for (const page of adjustedFlights) {
     let onePage = {}
     onePage.type = type
@@ -63,70 +80,74 @@ return objWithLimits
 }
 
 /**
- * Object from the API will show even the codeshare flights as an individual flights.
- * This function will merge ccodeshare flights in to one single flight containing all codeshare flight numbers
- * and airlines.
- * @param {object} flightObj Object with all codeshare flights as individual flights.
- * @param {string} type The type of the schedule: Departure or Arrival
- * @return {object} mergedFlights codeshare flights merged to their administrative flight.
+ * All flights that ARE NOT codeshare-filghts will be pushed into an own array.  
+ * 
+ * @param {object} dataObj All flight data object coming from the API. 
+ * @return {array of objects} codeShares containing only codeshare flights.
  */
-const handleCodeShareFlights = (flightObj, type) => {
-  // Array for codeshare-flights.
+const findCodeShares = (dataObj) => {
   let codeShares = []
-  // Array for the "metal" i.e.  administrative airline flight that really operates the flight.
-  let admins = []
-  for (let i = 0; i < flightObj.length; i++) {
-    // First all flights that ARE NOT codeshare-filghts will be pushed into an own array. The continue-statement will make sure
-    // the loop moves to the next index.
-    if (flightObj[i].cs_flight_iata !== null) {
+  for (let i = 0; i < dataObj.length; i++) {
+    // If the object does not have cs_flight_iata -key, then they are admin flights that are ignored here.
+    if (dataObj[i].cs_flight_iata) {
       const csItem = {
-        airline: flightObj[i].airline_iata,
-        flightNr: flightObj[i].flight_iata,
-        codeShareNr: flightObj[i].cs_flight_iata
+        airline: dataObj[i].airline_iata,
+        flightNr: dataObj[i].flight_iata,
+        codeShareNr: dataObj[i].cs_flight_iata
       }
       codeShares.push(csItem)
-      continue
-    }
-    // Depending on the type of the data (departure/arrival) necessary information will be added to object and pushed to an array.
-    else if (type === 'departures') {
-      const AdminItem = {
-        airline: AirlineIataToName(flightObj[i].airline_iata),
-        flightNr: [[flightObj[i].flight_iata]],
-        destination: IataToCity(flightObj[i].arr_iata),
-        scheduled: formatDate(flightObj[i].dep_time),
-        actual: flightObj[i].dep_actual
-          ? formatDate(flightObj[i].dep_actual)
-          : null,
-        estimated: flightObj[i].dep_estimated
-          ? formatDate(flightObj[i].dep_estimated)
-          : null,
-        terminal: flightObj[i].dep_terminal,
-        gate: flightObj[i].dep_gate,
-        status: flightObj[i].status
+    } 
+  }
+  return codeShares
+}
+/**
+ * All flights where there is only one airline owning the whole flight or the airline is the admin
+ * are selected here. These flights need all kinds of data: destination, airline, flight number, scheduled time
+ * actual (departure/arrival) time, and status (landed, active, scheduled, cancelled)  
+ * 
+ * @param {object} dataObj All flight data object coming from the API.
+ * @param {string} type departures or arrivals
+ * @return {array of objects} admins containing only admin flights.
+ */
+const findAdmins = (dataObj, type) => {
+  const admins = []
+  for (let i = 0; i < dataObj.length; i++) {
+    if (!dataObj[i].cs_flight_iata) {
+      if (type === 'departures') {
+        const AdminItem = {
+          airline: AirlineIataToName(dataObj[i].airline_iata),
+          flightNr: [[dataObj[i].flight_iata]],
+          destination: IataToCity(dataObj[i].arr_iata),
+          scheduled: formatDate(dataObj[i].dep_time),
+          actual: dataObj[i].dep_actual
+            ? formatDate(dataObj[i].dep_actual)
+            : null,
+          estimated: dataObj[i].dep_estimated
+            ? formatDate(dataObj[i].dep_estimated)
+            : null,
+          status: dataObj[i].status
+        }
+        admins.push(AdminItem)
       }
-      admins.push(AdminItem)
-    } else if (type === 'arrivals') {
-      const AdminItem = {
-        airline: AirlineIataToName(flightObj[i].airline_iata),
-        flightNr: [[flightObj[i].flight_iata]],
-        destination: IataToCity(flightObj[i].dep_iata),
-        scheduled: formatDate(flightObj[i].arr_time),
-        actual: flightObj[i].arr_actual
-          ? formatDate(flightObj[i].arr_actual)
-          : null,
-        estimated: flightObj[i].arr_estimated
-          ? formatDate(flightObj[i].arr_estimated)
-          : null,
-        terminal: flightObj[i].arr_terminal,
-        baggage: flightObj[i].arr_baggage,
-        status: flightObj[i].status
+      else if (type === 'arrivals') {
+        const AdminItem = {
+          airline: AirlineIataToName(dataObj[i].airline_iata),
+          flightNr: [[dataObj[i].flight_iata]],
+          destination: IataToCity(dataObj[i].dep_iata),
+          scheduled: formatDate(dataObj[i].arr_time),
+          actual: dataObj[i].arr_actual
+            ? formatDate(dataObj[i].arr_actual)
+            : null,
+          estimated: dataObj[i].arr_estimated
+            ? formatDate(dataObj[i].arr_estimated)
+            : null,
+          status: dataObj[i].status
+        }
+        admins.push(AdminItem)
       }
-      admins.push(AdminItem)
     }
   }
-  // The mergeCodeShares will make sure the codeshare flight numbers and airlines are added to the administrator flight object.
-  const mergedFlights = mergeCodeShares(codeShares, admins)
-  return mergedFlights
+  return admins
 }
 
 const mergeCodeShares = (codeShareFlights, adminFlights) => {
