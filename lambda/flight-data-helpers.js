@@ -9,7 +9,7 @@ const airports = require('./airports')
  * @return {object} formattedFlights object ready to be used in the browser.
  */
 const formatFlightData = async (data, timeLimit, type) => {
-  const withinTimeLimits = await getFlightsWithinTimeLimits(data, timeLimit)
+  const withinTimeLimits = await getFlightsWithinTimeLimits(data, timeLimit, type)
   // The API sorts data by estimated time, we want to show it based on scheduled time.
   const sortedByTime = await sortByTime(withinTimeLimits, type)
   // We find codeshare flights and the "real" admin flights
@@ -41,18 +41,30 @@ const sortByTime = (flightObj, type) => {
  * @param {number} timeLimit The time in seconds for the range of the scheduled fligths.
  * @return {object} objWithLimit contains those flights fitting the time range.
  */
-const getFlightsWithinTimeLimits = (originalObj, timeLimit) => {
+const getFlightsWithinTimeLimits = (originalObj, timeLimit, type) => {
   const thisDate = new Date()
 // This server is located in Stockholm so we need to add additional 3600 seconds (1 hour) to show right schedules.
 const thisMoment = Math.round(thisDate.getTime() / 1000) + 3600
 const objWithLimits = []
-for (let i = 0; i < originalObj.length; i++) {
- if (originalObj[i].dep_time_ts - thisMoment < timeLimit) {
-   if ((!originalObj[i].hasOwnProperty('dep_actual_ts')) || thisMoment - originalObj[i].dep_actual_ts < 7200) {
-     objWithLimits.push(originalObj[i]) 
-    } 
-  }
+if (type === 'departures') {
+  for (let i = 0; i < originalObj.length; i++) {
+    if (originalObj[i].dep_time_ts - thisMoment < timeLimit) {
+      if ((!originalObj[i].hasOwnProperty('dep_actual_ts')) || thisMoment - originalObj[i].dep_actual_ts < 7200) {
+        objWithLimits.push(originalObj[i]) 
+       } 
+     }
+   }
 }
+if (type === 'arrivals') {
+  for (let i = 0; i < originalObj.length; i++) {
+    if (originalObj[i].arr_time_ts - thisMoment < timeLimit) {
+      if ((!originalObj[i].hasOwnProperty('arr_actual_ts')) || thisMoment - originalObj[i].arr_actual_ts < 7200) {
+        objWithLimits.push(originalObj[i]) 
+       } 
+     }
+   }
+}
+
 return objWithLimits
 }
 
@@ -112,6 +124,7 @@ const findCodeShares = (dataObj) => {
 const findAdmins = (dataObj, type) => {
   const admins = []
   for (let i = 0; i < dataObj.length; i++) {
+    console.log(dataObj[i].dep_iata)
     if (!dataObj[i].cs_flight_iata) {
       if (type === 'departures') {
         const AdminItem = {

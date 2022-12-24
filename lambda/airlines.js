@@ -513,7 +513,7 @@ module.exports = [
     },
     {
      iata: "IB",
-     airline: "IBERIA"
+     airline: "Iberia"
     },
     {
      iata: "FI",
