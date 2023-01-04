@@ -980,6 +980,10 @@ module.exports = [
      airline: "United Airlines"
     },
     {
+      iata: "U2",
+      airline: "EasyJet"
+    },
+    {
      iata: "5X",
      airline: "UPS Airlines"
     },
@@ -1016,6 +1020,10 @@ module.exports = [
      airline: "VLM Airlines"
     },
     {
+      iata: "VY",
+      airline: "Vueling"
+    },
+    {
      iata: "Y4*",
      airline: "Volaris"
     },
@@ -1034,6 +1042,14 @@ module.exports = [
     {
      iata: "WF",
      airline: "Wideroe"
+    },
+    {
+      iata: "W6",
+      airline: "Wizz Air"
+    },
+    {
+      iata: "W9",
+      airline: "Wizz Air"
     },
     {
      iata: "MF",

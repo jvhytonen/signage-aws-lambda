@@ -43,28 +43,33 @@ const sortByTime = (flightObj, type) => {
  */
 const getFlightsWithinTimeLimits = (originalObj, timeLimit, type) => {
   const thisDate = new Date()
-// This server is located in Stockholm so we need to add additional 3600 seconds (1 hour) to show right schedules.
+// This moment converted into the UNIX timestamp. This server is located in Stockholm so we need to add additional 3600 seconds (1 hour) to show right schedules.
 const thisMoment = Math.round(thisDate.getTime() / 1000) + 3600
 const objWithLimits = []
+//Looping all departures:
 if (type === 'departures') {
   for (let i = 0; i < originalObj.length; i++) {
-    if (originalObj[i].dep_time_ts - thisMoment < timeLimit) {
+    // If they fit to the time-limit and has airline-name. The API provides some objects without airline and that is not valid data.
+    if ((originalObj[i].dep_time_ts - thisMoment < timeLimit) && originalObj[i].airline_iata) {
+      // If the object does not have 'dep_actual_ts', it has not departed yet. We also choose flights that have departed within 2 hours from this moment. 
       if ((!originalObj[i].hasOwnProperty('dep_actual_ts')) || thisMoment - originalObj[i].dep_actual_ts < 7200) {
         objWithLimits.push(originalObj[i]) 
        } 
      }
    }
 }
+//Looping all arrivals as departures above:
 if (type === 'arrivals') {
   for (let i = 0; i < originalObj.length; i++) {
-    if (originalObj[i].arr_time_ts - thisMoment < timeLimit) {
+    // If they fit to the time-limit and has airline-name. The API provides some objects without airline and that is not valid data.
+    if ((originalObj[i].arr_time_ts - thisMoment < timeLimit) && originalObj[i].airline_iata) {
+      // If the object does not have 'arr_actual_ts', it has not landed yet. We also choose flights that have landed within 2 hours from this moment. 
       if ((!originalObj[i].hasOwnProperty('arr_actual_ts')) || thisMoment - originalObj[i].arr_actual_ts < 7200) {
         objWithLimits.push(originalObj[i]) 
        } 
      }
    }
 }
-
 return objWithLimits
 }
 
